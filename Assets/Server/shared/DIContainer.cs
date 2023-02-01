@@ -16,7 +16,6 @@ namespace Networking.Shared
             }
         }
 
-
         private Dictionary<string, MonoBehaviour> m_behaviours;
         private Dictionary<string, ServiceBase> m_services;
         private void Start()
