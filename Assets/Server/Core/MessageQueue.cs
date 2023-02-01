@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.Networking.Transport;
 using UnityEngine;
 using Khan_Shared.Networking;
-using UnityEditor.VersionControl;
 using Networking.Shared;
 
 namespace Networking.Core

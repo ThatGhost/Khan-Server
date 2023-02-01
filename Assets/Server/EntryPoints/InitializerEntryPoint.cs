@@ -1,6 +1,7 @@
 ﻿using System;
 using Khan_Shared.Networking;
 using Networking.Services;
+using Networking.Shared;
 
 public class InitializerEntryPoint : EntryPointBase
 {
