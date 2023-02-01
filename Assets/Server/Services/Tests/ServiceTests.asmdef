@@ -1,0 +1,6 @@
+{
+    "name": "ServiceTests",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}
