@@ -2,13 +2,8 @@ using System.Collections.Generic;
 using System;
 using Khan_Shared.Networking;
 using Unity.Networking.Transport;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using Unity.Collections;
-using System.Reflection;
 using Networking.Shared;
-
-using UnityEngine;
 
 namespace Networking.Core
 {
@@ -25,28 +20,33 @@ namespace Networking.Core
                 MessagePair registeredPair = NetworkingCofigurations.getMessagePair(msg.MessageType);
                 foreach (var type in registeredPair.Types)
                 {
-                    switch (type.ToString())
-                    {
-                        case "System.Int32":
-                            msg.AddData(stream.ReadInt());
-                            break;
-                        case "System.UInt16":
-                            msg.AddData(stream.ReadUShort());
-                            break;
-                        case "System.Single":
-                            msg.AddData(stream.ReadFloat());
-                            break;
-                        case "System.Boolean":
-                            msg.AddData(stream.ReadByte());
-                            break;
-                        case "System.Byte":
-                            msg.AddData(stream.ReadByte());
-                            break;
-                    }
+                    ReadTypes(ref stream, ref msg, type);
                 }
                 messages.Add(msg);
             }
             return messages.ToArray();
+        }
+
+        private void ReadTypes(ref DataStreamReader stream, ref Message msg, Type type)
+        {
+            switch (type.ToString())
+            {
+                case "System.Int32":
+                    msg.AddData(stream.ReadInt());
+                    break;
+                case "System.UInt16":
+                    msg.AddData(stream.ReadUShort());
+                    break;
+                case "System.Single":
+                    msg.AddData(stream.ReadFloat());
+                    break;
+                case "System.Boolean":
+                    msg.AddData(stream.ReadByte());
+                    break;
+                case "System.Byte":
+                    msg.AddData(stream.ReadByte());
+                    break;
+            }
         }
 
         public void encodeToRawMessage(ref DataStreamWriter writer, Message msg)

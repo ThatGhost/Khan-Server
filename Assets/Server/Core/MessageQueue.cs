@@ -37,6 +37,13 @@ namespace Networking.Core
             return out_queue[connection].Count;
         }
 
+        public static int inQueueSize(int connection)
+        {
+            if (!in_queue.ContainsKey(connection))
+                return 0;
+            return in_queue[connection].Count;
+        }
+
         public static void publishMessage(Message message, int connection)
         {
             if (!out_queue.ContainsKey(connection))

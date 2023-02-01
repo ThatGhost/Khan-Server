@@ -17,7 +17,7 @@ namespace Networking.Services
         {
             Debug.Log("foo");
             Message msg = new Message(MessageTypes.HandShake, new object[2] { 3, 5 });
-            MessageQueue.publishMessage(msg, conn);
+            //MessageQueue.publishMessage(msg, conn);
             m_baseBehaviour.doSomething();
         }
     }
