@@ -2,18 +2,16 @@
 using UnityEngine;
 using Khan_Shared.Networking;
 using Networking.Shared;
+using Networking.Behaviours;
+using Zenject;
 
 namespace Networking.Services
 {
-    public class SetupService : ServiceBase
+    public class FooService: IFooService
     {
-        private BehaviourBase m_baseBehaviour;
-        public override void Init()
-        {
-            m_baseBehaviour = DIContainer.Instance.getBehaviour<BehaviourBase>();
-        } 
+        [Inject] private readonly ITestBehaviour m_baseBehaviour;
 
-        public void foo(int data, int other, int conn)
+        public void Foo(int data, int other, int conn)
         {
             Debug.Log("foo");
             Message msg = new Message(MessageTypes.HandShake, new object[2] { 3, 5 });

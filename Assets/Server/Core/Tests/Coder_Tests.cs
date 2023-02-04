@@ -30,7 +30,7 @@ public class Coder_Tests
         DataStreamReader reader = new DataStreamReader(data);
 
         // Act
-        Message[] response = m_coder.decodeRawMessages(ref reader);
+        Message[] response = m_coder.DecodeRawMessage(ref reader);
 
         // Assert
         Assert.AreEqual(MessageTypes.Default, response[0].MessageType);
@@ -45,7 +45,7 @@ public class Coder_Tests
         Message msg = new Message(MessageTypes.Default,new object[]{5});
 
         // Act
-        m_coder.encodeToRawMessage(ref writer, msg);
+        m_coder.EncodeRawMessage(ref writer, msg);
 
         // Assert
         Assert.AreEqual(6, writer.Length);

@@ -7,9 +7,9 @@ using Networking.Shared;
 
 namespace Networking.Core
 {
-    public class Coder
+    public class Coder: ICoder
     {
-        public Message[] decodeRawMessages(ref DataStreamReader stream)
+        public Message[] DecodeRawMessage(ref DataStreamReader stream)
         {
             List<Message> messages = new List<Message>();
 
@@ -49,13 +49,13 @@ namespace Networking.Core
             }
         }
 
-        public void encodeToRawMessage(ref DataStreamWriter writer, Message msg)
+        public void EncodeRawMessage(ref DataStreamWriter stream, Message message)
         {
-            writer.WriteUShort((UInt16)(short)msg.MessageType);
-            MessagePair registeredPair = NetworkingCofigurations.getMessagePair(msg.MessageType);
+            stream.WriteUShort((UInt16)(short)message.MessageType);
+            MessagePair registeredPair = NetworkingCofigurations.getMessagePair(message.MessageType);
             for (int i = 0; i < registeredPair.Types.Length; i++)
             {
-                writeTypes(ref writer, msg.Data[i], registeredPair.Types[i]);
+                writeTypes(ref stream, message.Data[i], registeredPair.Types[i]);
             }
         }
 
