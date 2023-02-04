@@ -26,8 +26,7 @@ namespace Networking.Core
         public delegate void OnClientDisconnect(int internalId);
         public static OnClientDisconnect onClientDisconnect;
 
-        [Inject]
-        private readonly IMessageQueue m_messageQueue;
+        [Inject] private readonly IMessageQueue m_messageQueue;
 
         public int Tick
         {

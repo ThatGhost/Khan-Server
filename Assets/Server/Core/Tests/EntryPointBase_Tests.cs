@@ -6,7 +6,8 @@ using UnityEngine.TestTools;
 
 using Networking.Shared;
 using Khan_Shared.Networking;
-using System.IO.Ports;
+
+using Networking.EntryPoints;
 
 public class EntryPointBase_Tests
 {
@@ -17,14 +18,13 @@ public class EntryPointBase_Tests
         TestEntryPoint testClass = new TestEntryPoint();
 
         // Act
-        testClass.Init();
         testClass.Messages[0].entryFunction.Invoke(new object[0], 1);
 
         // Assert
         Assert.IsTrue(testClass.HasInitialized);
 
-        List<EntryPointBase.MessageFunctionPair> pairs = testClass.Messages;
-        Assert.AreEqual(1, pairs.Count);
+        MessageFunctionPair[] pairs = testClass.Messages;
+        Assert.AreEqual(1, pairs.Length);
         Assert.AreEqual(pairs[0].MessageType, MessageTypes.Default);
         Assert.IsTrue(testClass.HasTriggered);
     }
@@ -33,12 +33,14 @@ public class EntryPointBase_Tests
     {
         public bool HasTriggered = false;
         public bool HasInitialized = false;
-        protected override void Initialize()
+
+        public TestEntryPoint()
         {
             HasInitialized = true;
-
-            // Message registering
-            p_messages.Add(new MessageFunctionPair(MessageTypes.Default, testFunction));
+            p_messages = new MessageFunctionPair[]
+            {
+                new MessageFunctionPair(MessageTypes.Default, testFunction)
+            };
         }
 
         private void testFunction(object[] data, int conn)

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Unity.Networking.Transport;
 using UnityEngine;
 using Khan_Shared.Networking;
+
 using Networking.Shared;
+using Networking.EntryPoints;
 
 using Zenject;
 
@@ -11,23 +13,22 @@ namespace Networking.Core
 {
     public class MessageQueue: IMessageQueue
     {
+        [Inject] private readonly ICoder m_Coder;
+        [Inject] private readonly IEntryPointRegistry m_entryPointRegistry;
+
         private Dictionary<int, Queue<Message>> out_queue;
         private Dictionary<int, Queue<Message>> in_queue;
-        [Inject] private readonly ICoder m_Coder;
-        private Dictionary<MessageTypes, EntryPointBase.MessageFunctionPair.OnEntry> m_entryFunctions;
-
+        private Dictionary<MessageTypes, MessageFunctionPair.OnEntry> m_entryFunctions;
         public void Init()
         {
             out_queue = new Dictionary<int, Queue<Message>>();
             in_queue = new Dictionary<int, Queue<Message>>();
-            m_entryFunctions = new Dictionary<MessageTypes, EntryPointBase.MessageFunctionPair.OnEntry>();
-            EntryPointRegistry registry = new EntryPointRegistry();
-            foreach (var EntryPoint in registry.EntryPoints)
+            m_entryFunctions = new Dictionary<MessageTypes, MessageFunctionPair.OnEntry>();
+            m_entryPointRegistry.Init();
+
+            foreach (var function in m_entryPointRegistry.MessagePairs)
             {
-                foreach (var function in EntryPoint.Messages)
-                {
-                    m_entryFunctions.Add(function.MessageType, function.entryFunction);
-                }
+                m_entryFunctions.Add(function.MessageType, function.entryFunction);
             }
         }
 
