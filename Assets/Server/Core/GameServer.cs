@@ -4,13 +4,14 @@ using UnityEngine;
 
 using Unity.Collections;
 using Unity.Networking.Transport;
+using Zenject;
 
 using Khan_Shared.Networking;
 using static Networking.Core.GameServer;
 
 namespace Networking.Core
 {
-    public class GameServer : MonoBehaviour
+    public class GameServer : MonoBehaviour, IGameServer
     {
         private NetworkDriver m_networkDriver;
         private NativeList<NetworkConnection> m_connections;
@@ -24,6 +25,8 @@ namespace Networking.Core
 
         public delegate void OnClientDisconnect(int internalId);
         public static OnClientDisconnect onClientDisconnect;
+
+        [Inject] private readonly IMessageQueue m_messageQueue;
 
         public int Tick
         {
@@ -47,7 +50,7 @@ namespace Networking.Core
                 Debug.LogError($"Failed to bind to port {endpoint.Port}");
             }
             m_connections = new NativeList<NetworkConnection>(NetworkingCofigurations.g_maxPlayers, Allocator.Persistent);
-            MessageQueue.init();
+            m_messageQueue.Init();
         }
 
         private void FixedUpdate()
@@ -57,7 +60,7 @@ namespace Networking.Core
             acceptNewConnections();
 
             readMessages();
-            MessageQueue.enterMessages();
+            m_messageQueue.InvokeMessages();
 
             //GameServer.onServerTick.Invoke(m_tick);
 
@@ -116,7 +119,7 @@ namespace Networking.Core
 
                     if (cmd == NetworkEvent.Type.Data)
                     {
-                        MessageQueue.enterMessage(ref stream, i);
+                        m_messageQueue.ReadMessage(ref stream, i);
                     }
                 }
             }
@@ -128,13 +131,13 @@ namespace Networking.Core
             {
                 if (m_connections[i] == default(NetworkConnection))
                     continue;
-                if (MessageQueue.outQueueSize(i) == 0)
+                if (m_messageQueue.OutQueueSize(i) == 0)
                     continue;
 
                 try
                 {
                     m_networkDriver.BeginSend(m_connections[i], out var writer);
-                    MessageQueue.writeMessages(ref writer, m_connections[i].InternalId);
+                    m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
                     m_networkDriver.EndSend(writer);
                 }
                 catch (System.Exception)

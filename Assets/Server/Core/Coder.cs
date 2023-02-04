@@ -2,19 +2,14 @@ using System.Collections.Generic;
 using System;
 using Khan_Shared.Networking;
 using Unity.Networking.Transport;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using Unity.Collections;
-using System.Reflection;
 using Networking.Shared;
-
-using UnityEngine;
 
 namespace Networking.Core
 {
-    public class Coder
+    public class Coder: ICoder
     {
-        public Message[] decodeRawMessages(ref DataStreamReader stream)
+        public Message[] DecodeRawMessage(ref DataStreamReader stream)
         {
             List<Message> messages = new List<Message>();
 
@@ -25,37 +20,42 @@ namespace Networking.Core
                 MessagePair registeredPair = NetworkingCofigurations.getMessagePair(msg.MessageType);
                 foreach (var type in registeredPair.Types)
                 {
-                    switch (type.ToString())
-                    {
-                        case "System.Int32":
-                            msg.AddData(stream.ReadInt());
-                            break;
-                        case "System.UInt16":
-                            msg.AddData(stream.ReadUShort());
-                            break;
-                        case "System.Single":
-                            msg.AddData(stream.ReadFloat());
-                            break;
-                        case "System.Boolean":
-                            msg.AddData(stream.ReadByte());
-                            break;
-                        case "System.Byte":
-                            msg.AddData(stream.ReadByte());
-                            break;
-                    }
+                    ReadTypes(ref stream, ref msg, type);
                 }
                 messages.Add(msg);
             }
             return messages.ToArray();
         }
 
-        public void encodeToRawMessage(ref DataStreamWriter writer, Message msg)
+        private void ReadTypes(ref DataStreamReader stream, ref Message msg, Type type)
         {
-            writer.WriteUShort((UInt16)(short)msg.MessageType);
-            MessagePair registeredPair = NetworkingCofigurations.getMessagePair(msg.MessageType);
+            switch (type.ToString())
+            {
+                case "System.Int32":
+                    msg.AddData(stream.ReadInt());
+                    break;
+                case "System.UInt16":
+                    msg.AddData(stream.ReadUShort());
+                    break;
+                case "System.Single":
+                    msg.AddData(stream.ReadFloat());
+                    break;
+                case "System.Boolean":
+                    msg.AddData(stream.ReadByte());
+                    break;
+                case "System.Byte":
+                    msg.AddData(stream.ReadByte());
+                    break;
+            }
+        }
+
+        public void EncodeRawMessage(ref DataStreamWriter stream, Message message)
+        {
+            stream.WriteUShort((UInt16)(short)message.MessageType);
+            MessagePair registeredPair = NetworkingCofigurations.getMessagePair(message.MessageType);
             for (int i = 0; i < registeredPair.Types.Length; i++)
             {
-                writeTypes(ref writer, msg.Data[i], registeredPair.Types[i]);
+                writeTypes(ref stream, message.Data[i], registeredPair.Types[i]);
             }
         }
 

@@ -3,41 +3,50 @@ using System.Collections.Generic;
 using Unity.Networking.Transport;
 using UnityEngine;
 using Khan_Shared.Networking;
+
 using Networking.Shared;
+using Networking.EntryPoints;
+
+using Zenject;
 
 namespace Networking.Core
 {
-    public static class MessageQueue
+    public class MessageQueue: IMessageQueue
     {
-        private static Dictionary<int, Queue<Message>> out_queue;
-        private static Dictionary<int, Queue<Message>> in_queue;
-        private static Coder m_Coder;
-        private static Dictionary<MessageTypes, EntryPointBase.MessageFunctionPair.OnEntry> m_entryFunctions;
+        [Inject] private readonly ICoder m_Coder;
+        [Inject] private readonly IEntryPointRegistry m_entryPointRegistry;
 
-        public static void init()
+        private Dictionary<int, Queue<Message>> out_queue;
+        private Dictionary<int, Queue<Message>> in_queue;
+        private Dictionary<MessageTypes, MessageFunctionPair.OnEntry> m_entryFunctions;
+        public void Init()
         {
             out_queue = new Dictionary<int, Queue<Message>>();
             in_queue = new Dictionary<int, Queue<Message>>();
-            m_Coder = new Coder();
-            m_entryFunctions = new Dictionary<MessageTypes, EntryPointBase.MessageFunctionPair.OnEntry>();
-            EntryPointRegistry registry = new EntryPointRegistry();
-            foreach (var EntryPoint in registry.EntryPoints)
+            m_entryFunctions = new Dictionary<MessageTypes, MessageFunctionPair.OnEntry>();
+            m_entryPointRegistry.Init();
+
+            foreach (var function in m_entryPointRegistry.MessagePairs)
             {
-                foreach (var function in EntryPoint.Messages)
-                {
-                    m_entryFunctions.Add(function.MessageType, function.entryFunction);
-                }
+                m_entryFunctions.Add(function.MessageType, function.entryFunction);
             }
         }
 
-        public static int outQueueSize(int connection)
+        public int OutQueueSize(int connection)
         {
             if (!out_queue.ContainsKey(connection))
                 return 0;
             return out_queue[connection].Count;
         }
 
-        public static void publishMessage(Message message, int connection)
+        public int InQueueSize(int connection)
+        {
+            if (!in_queue.ContainsKey(connection))
+                return 0;
+            return in_queue[connection].Count;
+        }
+
+        public void PublishMessage(Message message, int connection)
         {
             if (!out_queue.ContainsKey(connection))
                 out_queue.Add(connection, new Queue<Message>());
@@ -45,7 +54,7 @@ namespace Networking.Core
             out_queue[connection].Enqueue(message);
         }
 
-        public static void enterMessages()
+        public void InvokeMessages()
         {
             foreach (var conn in in_queue)
             {
@@ -57,7 +66,7 @@ namespace Networking.Core
             }
         }
 
-        public static void writeMessages(ref DataStreamWriter writer, int connection)
+        public void DequeueMessages(ref DataStreamWriter stream, int connection)
         {
             if (!out_queue.ContainsKey(connection))
                 out_queue.Add(connection, new Queue<Message>());
@@ -65,16 +74,16 @@ namespace Networking.Core
             while (out_queue[connection].Count > 0)
             {
                 Message msg = out_queue[connection].Dequeue();
-                m_Coder.encodeToRawMessage(ref writer, msg);
+                m_Coder.EncodeRawMessage(ref stream, msg);
             }
         }
 
-        public static void enterMessage(ref DataStreamReader stream, int connection)
+        public void ReadMessage(ref DataStreamReader stream, int connection)
         {
             if (!in_queue.ContainsKey(connection))
                 in_queue.Add(connection, new Queue<Message>());
 
-            Message[] messages = m_Coder.decodeRawMessages(ref stream);
+            Message[] messages = m_Coder.DecodeRawMessage(ref stream);
             foreach (var msg in messages)
             {
                 in_queue[connection].Enqueue(msg);

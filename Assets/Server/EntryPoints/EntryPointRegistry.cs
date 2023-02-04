@@ -1,27 +1,32 @@
 ﻿using System;
-public class EntryPointRegistry
+using System.Collections;
+using System.Collections.Generic;
+using Zenject;
+
+namespace Networking.EntryPoints
 {
-	private EntryPointBase[] m_entryPoints;
+    public class EntryPointRegistry : IEntryPointRegistry
+    {
+        // Add injects
+        [Inject] private readonly ITestEntryPoint m_TestEntryPoint;
 
-	public EntryPointRegistry()
-	{
-		m_entryPoints = new EntryPointBase[]
-		{
-			new InitializerEntryPoint(),
-        };
+        // Then add to m_FunctionPairs
+        public void Init()
+        {
+            m_FunctionPairs.AddRange(m_TestEntryPoint.Messages);
+        }
 
-		foreach (var entryPoint in m_entryPoints)
-		{
-			entryPoint.Init();
-		}
-	}
 
-	public EntryPointBase[] EntryPoints
-	{
-		get
-		{
-			return m_entryPoints;
-		}
-	}
+
+
+        // Dont touch
+        private List<MessageFunctionPair> m_FunctionPairs = new List<MessageFunctionPair>();
+        public MessageFunctionPair[] MessagePairs
+        {
+            get
+            {
+                return m_FunctionPairs.ToArray();
+            }
+        }
+    }
 }
-
