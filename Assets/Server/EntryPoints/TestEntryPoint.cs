@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Khan_Shared.Networking;
 using Networking.Services;
-using Networking.Shared;
 using Zenject;
 
 namespace Networking.EntryPoints
@@ -15,13 +14,13 @@ namespace Networking.EntryPoints
         {
             p_messages = new MessageFunctionPair[]
             {
-            new MessageFunctionPair(MessageTypes.HandShake, handShake)
+                new MessageFunctionPair(MessageTypes.HandShake, handShake),
             };
         }
 
         private void handShake(object[] data, int conn)
         {
-            m_SetupService.Foo((int)data[0], (int)data[1], conn);
+            m_SetupService.Foo((int)(uint)data[0], (int)(uint)data[1], conn);
         }
     }
 }

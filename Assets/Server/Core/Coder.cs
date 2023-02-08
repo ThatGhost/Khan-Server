@@ -3,7 +3,6 @@ using System;
 using Khan_Shared.Networking;
 using Unity.Networking.Transport;
 using Unity.Collections;
-using Networking.Shared;
 
 namespace Networking.Core
 {
@@ -27,23 +26,29 @@ namespace Networking.Core
             return messages.ToArray();
         }
 
-        private void ReadTypes(ref DataStreamReader stream, ref Message msg, Type type)
+        private void ReadTypes(ref DataStreamReader stream, ref Message msg, DataType type)
         {
-            switch (type.ToString())
+            switch (type)
             {
-                case "System.Int32":
+                case DataType.Uint:
+                    msg.AddData(stream.ReadUInt());
+                    break;
+                case DataType.Int:
                     msg.AddData(stream.ReadInt());
                     break;
-                case "System.UInt16":
+                case DataType.Ushort:
                     msg.AddData(stream.ReadUShort());
                     break;
-                case "System.Single":
+                case DataType.Short:
+                    msg.AddData(stream.ReadShort());
+                    break;
+                case DataType.Float:
                     msg.AddData(stream.ReadFloat());
                     break;
-                case "System.Boolean":
+                case DataType.Bool:
                     msg.AddData(stream.ReadByte());
                     break;
-                case "System.Byte":
+                case DataType.Byte:
                     msg.AddData(stream.ReadByte());
                     break;
             }
@@ -59,23 +64,29 @@ namespace Networking.Core
             }
         }
 
-        private void writeTypes(ref DataStreamWriter writer, object obj, Type type)
+        private void writeTypes(ref DataStreamWriter writer, object obj, DataType type)
         {
-            switch (type.ToString())
+            switch (type)
             {
-                case "System.Int32":
+                case DataType.Uint:
+                    writer.WriteUInt((uint)obj);
+                    break;
+                case DataType.Int:
                     writer.WriteInt((int)obj);
                     break;
-                case "System.UInt16":
+                case DataType.Ushort:
                     writer.WriteUShort((ushort)obj);
                     break;
-                case "System.Single":
+                case DataType.Short:
+                    writer.WriteShort((short)obj);
+                    break;
+                case DataType.Float:
                     writer.WriteFloat((float)obj);
                     break;
-                case "System.Boolean":
+                case DataType.Bool:
                     writer.WriteByte(Convert.ToByte((bool)obj));
                     break;
-                case "System.Byte":
+                case DataType.Byte:
                     writer.WriteByte((byte)obj);
                     break;
             }

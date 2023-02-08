@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Networking.Transport;
 using UnityEngine;
-using Khan_Shared.Networking;
 
-using Networking.Shared;
+using Khan_Shared.Networking;
 using Networking.EntryPoints;
 
 using Zenject;
@@ -52,6 +51,17 @@ namespace Networking.Core
                 out_queue.Add(connection, new Queue<Message>());
 
             out_queue[connection].Enqueue(message);
+        }
+
+        public void PublishMessages(Message[] messages, int connection)
+        {
+            if (!out_queue.ContainsKey(connection))
+                out_queue.Add(connection, new Queue<Message>());
+
+            foreach (var message in messages)
+            {
+                out_queue[connection].Enqueue(message);
+            }
         }
 
         public void InvokeMessages()

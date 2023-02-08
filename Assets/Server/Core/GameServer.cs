@@ -62,7 +62,7 @@ namespace Networking.Core
             readMessages();
             m_messageQueue.InvokeMessages();
 
-            //GameServer.onServerTick.Invoke(m_tick);
+            GameServer.onServerTick.Invoke(m_tick);
 
             writeMessages();
             m_tick++;
@@ -140,10 +140,10 @@ namespace Networking.Core
                     m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
                     m_networkDriver.EndSend(writer);
                 }
-                catch (System.Exception)
+                catch (System.Exception err)
                 {
                     m_connections[i] = default(NetworkConnection);
-                    Debug.Log($"connection {i} timed out");
+                    Debug.Log($"connection {i} timed out\n with err {err}");
                 }
             }
         }

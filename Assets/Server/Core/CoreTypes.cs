@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Networking.Transport;
-using Networking.Shared;
 using Khan_Shared.Networking;
 
 namespace Networking.EntryPoints
@@ -66,6 +65,7 @@ namespace Networking.Core
         public void InvokeMessages();
         public void DequeueMessages(ref DataStreamWriter stream, int connection);
         public void PublishMessage(Message message, int connection);
+        public void PublishMessages(Message[] messages, int connection);
         public void ReadMessage(ref DataStreamReader stream, int connection);
     }
 

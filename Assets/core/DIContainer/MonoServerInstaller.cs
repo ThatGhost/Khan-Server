@@ -21,6 +21,7 @@ public class MonoServerInstaller : MonoInstaller
 
         // Services
         Container.Bind<IFooService>().To<FooService>().AsSingle();
+        Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
 
         // Behaviours
         Container.Bind<ITestBehaviour>().To<TestBehaviour>().FromComponentOn(server).AsSingle();
