@@ -4,9 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using Networking.Shared;
 using Khan_Shared.Networking;
-
 using Networking.EntryPoints;
 
 public class EntryPointBase_Tests

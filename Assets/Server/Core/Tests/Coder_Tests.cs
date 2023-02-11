@@ -6,7 +6,6 @@ using UnityEngine.TestTools;
 
 using Networking.Core;
 using Unity.Networking.Transport;
-using Networking.Shared;
 using Unity.Collections;
 using Khan_Shared.Networking;
 
