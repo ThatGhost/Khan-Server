@@ -13,6 +13,8 @@ namespace Networking.Services
     public class MessagePublisher : IMessagePublisher
     {
         [Inject] private readonly IMessageQueue m_messageQueue;
+
+
         private Dictionary<int,Queue<Message>> m_highPrioQueue = new Dictionary<int,Queue<Message>>();
         private Dictionary<int,Queue<Message>> m_mediumPrioQueue = new Dictionary<int,Queue<Message>>();
         private Dictionary<int,Queue<Message>> m_lowPrioQueue = new Dictionary<int,Queue<Message>>();
@@ -88,6 +90,7 @@ namespace Networking.Services
                     break;
             }
         }
+
         public void PublishGlobalMessage(Message msg)
         {
             switch (msg.Priority)

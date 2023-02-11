@@ -67,6 +67,7 @@ namespace Networking.Core
         public void PublishMessage(Message message, int connection);
         public void PublishMessages(Message[] messages, int connection);
         public void ReadMessage(ref DataStreamReader stream, int connection);
+        public void DequeuRelaibleMessages(ref DataStreamWriter stream, int connection);
     }
 
     public interface ICoder

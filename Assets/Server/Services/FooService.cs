@@ -13,7 +13,7 @@ namespace Networking.Services
 
         public void Foo(int data, int other, int conn)
         {
-            Message msg = new Message(MessageTypes.HandShake, new object[2] { (uint)3, (uint)5 }, MessagePriorities.high);
+            Message msg = new Message(MessageTypes.HandShake, new object[2] { (uint)3, (uint)5 }, MessagePriorities.high, true);
             m_messagePublisher.PublishMessage(msg, conn);
             m_baseBehaviour.doSomething();
         }

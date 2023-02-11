@@ -17,11 +17,16 @@ namespace Networking.Core
 
         private Dictionary<int, Queue<Message>> out_queue;
         private Dictionary<int, Queue<Message>> in_queue;
+        private Dictionary<int, Queue<Message>> relaible_queue;
+
         private Dictionary<MessageTypes, MessageFunctionPair.OnEntry> m_entryFunctions;
+
         public void Init()
         {
             out_queue = new Dictionary<int, Queue<Message>>();
             in_queue = new Dictionary<int, Queue<Message>>();
+            relaible_queue = new Dictionary<int, Queue<Message>>();
+
             m_entryFunctions = new Dictionary<MessageTypes, MessageFunctionPair.OnEntry>();
             m_entryPointRegistry.Init();
 
@@ -49,18 +54,24 @@ namespace Networking.Core
         {
             if (!out_queue.ContainsKey(connection))
                 out_queue.Add(connection, new Queue<Message>());
+            if (!relaible_queue.ContainsKey(connection))
+                relaible_queue.Add(connection, new Queue<Message>());
 
-            out_queue[connection].Enqueue(message);
+            if (message.IsReliable) relaible_queue[connection].Enqueue(message);
+            else out_queue[connection].Enqueue(message);
         }
 
         public void PublishMessages(Message[] messages, int connection)
         {
             if (!out_queue.ContainsKey(connection))
                 out_queue.Add(connection, new Queue<Message>());
+            if (!relaible_queue.ContainsKey(connection))
+                relaible_queue.Add(connection, new Queue<Message>());
 
             foreach (var message in messages)
             {
-                out_queue[connection].Enqueue(message);
+                if (message.IsReliable) relaible_queue[connection].Enqueue(message);
+                else out_queue[connection].Enqueue(message);
             }
         }
 
@@ -97,6 +108,18 @@ namespace Networking.Core
             foreach (var msg in messages)
             {
                 in_queue[connection].Enqueue(msg);
+            }
+        }
+
+        public void DequeuRelaibleMessages(ref DataStreamWriter stream, int connection)
+        {
+            if (!relaible_queue.ContainsKey(connection))
+                relaible_queue.Add(connection, new Queue<Message>());
+
+            while (relaible_queue[connection].Count > 0)
+            {
+                Message msg = relaible_queue[connection].Dequeue();
+                m_Coder.EncodeRawMessage(ref stream, msg);
             }
         }
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Unity.Collections;
 using Unity.Networking.Transport;
+using Unity.Networking.Transport.Utilities;
 using Zenject;
 
 using Khan_Shared.Networking;
@@ -15,6 +16,9 @@ namespace Networking.Core
     {
         private NetworkDriver m_networkDriver;
         private NativeList<NetworkConnection> m_connections;
+        private NetworkPipeline m_updatePipeline;
+        private NetworkPipeline m_relaiblePipeline;
+
         private int m_tick = 0;
 
         public delegate void OnServerTick(int tick);
@@ -39,6 +43,9 @@ namespace Networking.Core
         private void Start()
         {
             m_networkDriver = NetworkDriver.Create();
+            m_updatePipeline = m_networkDriver.CreatePipeline();
+            m_relaiblePipeline = m_networkDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
+
             NetworkEndPoint endpoint = NetworkEndPoint.AnyIpv4;
             endpoint.Port = NetworkingCofigurations.g_serverPort;
             if (m_networkDriver.Bind(endpoint) == 0)
@@ -136,9 +143,16 @@ namespace Networking.Core
 
                 try
                 {
-                    m_networkDriver.BeginSend(m_connections[i], out var writer);
-                    m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
-                    m_networkDriver.EndSend(writer);
+                    {   //unrelaible update layer
+                        m_networkDriver.BeginSend(m_updatePipeline, m_connections[i], out var writer);
+                        m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
+                        m_networkDriver.EndSend(writer);
+                    }
+                    {   //relailability layer
+                        m_networkDriver.BeginSend(m_relaiblePipeline, m_connections[i], out var writer);
+                        m_messageQueue.DequeuRelaibleMessages(ref writer, m_connections[i].InternalId);
+                        m_networkDriver.EndSend(writer);
+                    }
                 }
                 catch (System.Exception err)
                 {
