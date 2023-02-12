@@ -5,7 +5,7 @@ namespace Networking.Services
 {
     public interface IFooService
     {
-        public void Foo(int data, int other, int conn);
+        public void Foo(uint data, byte[] other, int conn);
     }
 
     public interface IMessagePublisher

@@ -20,7 +20,7 @@ namespace Networking.EntryPoints
 
         private void handShake(object[] data, int conn)
         {
-            m_SetupService.Foo((int)(uint)data[0], (int)(uint)data[1], conn);
+            m_SetupService.Foo((uint)data[0], (byte[])data[1], conn);
         }
     }
 }

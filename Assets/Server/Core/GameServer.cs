@@ -103,8 +103,14 @@ namespace Networking.Core
             {
                 m_connections.Add(conn);
                 Debug.Log($"Client connected {conn.InternalId}");
-                //GameServer.onClientConnect.Invoke(conn.InternalId);
+                StartCoroutine(clientConnectWhaitTime(conn.InternalId));
             }
+        }
+
+        private IEnumerator clientConnectWhaitTime(int conn)
+        {
+            yield return new WaitForSeconds(0.5f);
+            GameServer.onClientConnect.Invoke(conn);
         }
 
         private void readMessages()
