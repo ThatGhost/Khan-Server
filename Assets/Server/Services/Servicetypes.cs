@@ -13,4 +13,9 @@ namespace Networking.Services
         public void PublishMessage(Message msg, int connection);
         public void PublishGlobalMessage(Message msg);
     }
+
+    public interface IPlayerInputService
+    {
+        public void ReceivePlayerInput(byte[] input, int connection);
+    }
 }

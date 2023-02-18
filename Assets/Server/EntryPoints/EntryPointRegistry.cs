@@ -8,12 +8,14 @@ namespace Networking.EntryPoints
     public class EntryPointRegistry : IEntryPointRegistry
     {
         // Add injects
-        [Inject] private readonly ITestEntryPoint m_TestEntryPoint;
+        //[Inject] private readonly ITestEntryPoint m_TestEntryPoint;
+        [Inject] private readonly IPlayerEntryPoint m_playerEntryPoint;
 
         // Then add to m_FunctionPairs
         public void Init()
         {
-            m_FunctionPairs.AddRange(m_TestEntryPoint.Messages);
+            //m_FunctionPairs.AddRange(m_TestEntryPoint.Messages);
+            m_FunctionPairs.AddRange(m_playerEntryPoint.Messages);
         }
 
 

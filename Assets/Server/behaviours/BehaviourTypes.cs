@@ -1,6 +1,14 @@
 ﻿using System;
 
-public interface ITestBehaviour
+namespace Networking.Behaviours
 {
-    public void doSomething();
+    public interface ITestBehaviour
+    {
+        public void doSomething();
+    }
+
+    public interface IPlayerPositionBehaviour
+    {
+        public void updateInput(byte[] inputs);
+    }
 }

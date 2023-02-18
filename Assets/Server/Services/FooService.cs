@@ -16,14 +16,13 @@ namespace Networking.Services
         [Inject] private readonly IMessagePublisher m_messagePublisher;
 
         public FooService() {
-            GameServer.onClientConnect += onconnection;
+            //GameServer.onClientConnect += onconnection;
         }
 
         public void Foo(uint data, byte[] other, int conn)
         {
             ushort datasize = BitConverter.ToUInt16(new byte[2] { other[0], other[1] });
             ushort datasend = BitConverter.ToUInt16(new byte[2] { other[2], other[3] });
-            Debug.Log($"datasize {datasize}, datasend {datasend}");
 
             m_baseBehaviour.doSomething();
         }
