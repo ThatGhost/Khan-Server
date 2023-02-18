@@ -5,12 +5,17 @@ namespace Networking.Services
 {
     public interface IFooService
     {
-        public void Foo(int data, int other, int conn);
+        public void Foo(uint data, byte[] other, int conn);
     }
 
     public interface IMessagePublisher
     {
         public void PublishMessage(Message msg, int connection);
         public void PublishGlobalMessage(Message msg);
+    }
+
+    public interface IPlayerInputService
+    {
+        public void ReceivePlayerInput(byte[] input, int connection);
     }
 }

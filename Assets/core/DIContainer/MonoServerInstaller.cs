@@ -11,20 +11,34 @@ public class MonoServerInstaller : MonoInstaller
     public GameObject server;
     public override void InstallBindings()
     {
+        // Core
         Container.Bind<ICoder>().To<Coder>().AsSingle();
         Container.Bind<IMessageQueue>().To<MessageQueue>().AsSingle();
         Container.Bind<IGameServer>().To<GameServer>().AsSingle();
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
 
-        // EntryPoints
-        Container.Bind<ITestEntryPoint>().To<TestEntryPoint>().AsSingle();
+        registerEntryPoints();
+        registerServices();
+        registerBehaviours();
+    }
 
-        // Services
-        Container.Bind<IFooService>().To<FooService>().AsSingle();
+    private void registerEntryPoints()
+    {
+        //Container.Bind<ITestEntryPoint>().To<TestEntryPoint>().AsSingle();
+        Container.Bind<IPlayerEntryPoint>().To<PlayerEntryPoint>().AsSingle();
+    }
+
+    private void registerServices()
+    {
+        //Container.Bind<IFooService>().To<FooService>().AsSingle();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
+        Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
+    }
 
-        // Behaviours
-        Container.Bind<ITestBehaviour>().To<TestBehaviour>().FromComponentOn(server).AsSingle();
+    private void registerBehaviours()
+    {
+        //Container.Bind<ITestBehaviour>().To<TestBehaviour>().FromComponentOn(server).AsSingle();
+        Container.Bind<IPlayerPositionBehaviour>().To<PlayerPositionBehaviour>().FromComponentOn(server).AsSingle();
     }
 }
 

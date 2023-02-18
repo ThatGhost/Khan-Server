@@ -69,7 +69,8 @@ namespace Networking.Core
             readMessages();
             m_messageQueue.InvokeMessages();
 
-            GameServer.onServerTick.Invoke(m_tick);
+            if (GameServer.onServerTick != null)
+                GameServer.onServerTick.Invoke(m_tick);
 
             writeMessages();
             m_tick++;
@@ -102,9 +103,16 @@ namespace Networking.Core
             while ((conn = m_networkDriver.Accept()) != default(NetworkConnection))
             {
                 m_connections.Add(conn);
-                Debug.Log($"Client connected {conn.InternalId}");
-                //GameServer.onClientConnect.Invoke(conn.InternalId);
+                StartCoroutine(clientConnectWhaitTime(conn.InternalId));
             }
+        }
+
+        private IEnumerator clientConnectWhaitTime(int conn)
+        {
+            yield return new WaitForSeconds(0.5f);
+            Debug.Log($"Client connected {conn}");
+            if (GameServer.onClientConnect != null)
+               GameServer.onClientConnect.Invoke(conn);
         }
 
         private void readMessages()
@@ -138,19 +146,28 @@ namespace Networking.Core
             {
                 if (m_connections[i] == default(NetworkConnection))
                     continue;
-                if (m_messageQueue.OutQueueSize(i) == 0)
-                    continue;
 
                 try
                 {
-                    {   //unrelaible update layer
-                        m_networkDriver.BeginSend(m_updatePipeline, m_connections[i], out var writer);
-                        m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
+                    //unrelaible update layer
+                    if (m_messageQueue.OutQueueSize(i) > 0)
+                    {   
+                        int code = m_networkDriver.BeginSend(m_updatePipeline, m_connections[i], out var writer);
+
+                        if (code == 0) m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
+                        else throw new System.Exception($"Cant send data to server, writer exited with code {code}");
+
                         m_networkDriver.EndSend(writer);
                     }
-                    {   //relailability layer
-                        m_networkDriver.BeginSend(m_relaiblePipeline, m_connections[i], out var writer);
-                        m_messageQueue.DequeuRelaibleMessages(ref writer, m_connections[i].InternalId);
+
+                    //relailability layer
+                    if (m_messageQueue.RelaibleQueueSize(i) > 0)
+                    {  
+                        int code = m_networkDriver.BeginSend(m_relaiblePipeline, m_connections[i], out var writer);
+
+                        if (code == 0) m_messageQueue.DequeuRelaibleMessages(ref writer, m_connections[i].InternalId);
+                        else throw new System.Exception($"Cant send data to server, writer exited with code {code}");
+
                         m_networkDriver.EndSend(writer);
                     }
                 }

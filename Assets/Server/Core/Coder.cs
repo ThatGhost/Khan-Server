@@ -51,6 +51,16 @@ namespace Networking.Core
                 case DataType.Byte:
                     msg.AddData(stream.ReadByte());
                     break;
+                case DataType.Varied:
+                    ushort size = stream.ReadUShort();
+                    List<byte> bytes = new List<byte>();
+                    bytes.AddRange(BitConverter.GetBytes(size));
+                    for (int i = 0; i < size; i++)
+                    {
+                        bytes.Add(stream.ReadByte());
+                    }
+                    msg.AddData(bytes.ToArray());
+                    break;
             }
         }
 
@@ -88,6 +98,17 @@ namespace Networking.Core
                     break;
                 case DataType.Byte:
                     writer.WriteByte((byte)obj);
+                    break;
+                case DataType.Varied:
+                    byte[] bytes = (byte[])obj;
+                    if (bytes.Length < 3) throw new Exception("Lenght of varied datatype to short");
+
+                    ushort size = BitConverter.ToUInt16(new byte[2] { bytes[0], bytes[1] });
+                    writer.WriteUShort(size);
+                    for (int i = 0; i < size; i++)
+                    {
+                        writer.WriteByte(bytes[i + 2]);
+                    }
                     break;
             }
         }

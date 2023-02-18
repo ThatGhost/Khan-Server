@@ -60,8 +60,11 @@ namespace Networking.Core
     public interface IMessageQueue
     {
         public void Init();
+
         public int OutQueueSize(int connection);
         public int InQueueSize(int connection);
+        public int RelaibleQueueSize(int connection);
+
         public void InvokeMessages();
         public void DequeueMessages(ref DataStreamWriter stream, int connection);
         public void PublishMessage(Message message, int connection);

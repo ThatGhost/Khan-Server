@@ -50,6 +50,13 @@ namespace Networking.Core
             return in_queue[connection].Count;
         }
 
+        public int RelaibleQueueSize(int connection)
+        {
+            if (!relaible_queue.ContainsKey(connection))
+                return 0;
+            return relaible_queue[connection].Count;
+        }
+
         public void PublishMessage(Message message, int connection)
         {
             if (!out_queue.ContainsKey(connection))

@@ -6,8 +6,6 @@ using Khan_Shared.Networking;
 using Networking.Core;
 using Zenject;
 
-using UnityEngine;
-
 namespace Networking.Services
 {
     public class MessagePublisher : IMessagePublisher
@@ -36,7 +34,7 @@ namespace Networking.Services
                 while (m_highPrioQueue[connection].Count > 0)
                 {
                     int newBigMessageSize = bigMessageSize +
-                        NetworkingCofigurations.getSizeOfMessage(m_highPrioQueue[connection].Peek().MessageType);
+                        NetworkingCofigurations.getSizeOfMessage(m_highPrioQueue[connection].Peek());
                     if (newBigMessageSize > maxBigMessageSize) break;
 
                     bigMessageSize = newBigMessageSize;
@@ -46,7 +44,7 @@ namespace Networking.Services
                 while (m_mediumPrioQueue[connection].Count > 0)
                 {
                     int newBigMessageSize = bigMessageSize +
-                        NetworkingCofigurations.getSizeOfMessage(m_mediumPrioQueue[connection].Peek().MessageType);
+                        NetworkingCofigurations.getSizeOfMessage(m_highPrioQueue[connection].Peek());
                     if (newBigMessageSize > maxBigMessageSize) break;
 
                     bigMessageSize = newBigMessageSize;
@@ -56,7 +54,7 @@ namespace Networking.Services
                 while (m_lowPrioQueue[connection].Count > 0)
                 {
                     int newBigMessageSize = bigMessageSize +
-                        NetworkingCofigurations.getSizeOfMessage(m_lowPrioQueue[connection].Peek().MessageType);
+                        NetworkingCofigurations.getSizeOfMessage(m_lowPrioQueue[connection].Peek());
                     if (newBigMessageSize > maxBigMessageSize) break;
 
                     bigMessageSize = newBigMessageSize;

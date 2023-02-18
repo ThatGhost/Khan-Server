@@ -4,6 +4,10 @@ using Khan_Shared.Networking;
 namespace Networking.EntryPoints
 {
     public interface ITestEntryPoint : IEntryPoint { };
+    public interface IPlayerEntryPoint : IEntryPoint { };
+
+
+
 
     public interface IEntryPointRegistry
     {
