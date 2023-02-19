@@ -1,5 +1,6 @@
 ﻿using System;
 using Khan_Shared.Networking;
+using Khan_Shared.Simulation;
 
 namespace Networking.Services
 {
@@ -14,8 +15,14 @@ namespace Networking.Services
         public void PublishGlobalMessage(Message msg);
     }
 
+    public interface ILogger
+    {
+        public void LogMessage(string message);
+        public void LogError(string message);
+    }
+
     public interface IPlayerInputService
     {
-        public void ReceivePlayerInput(byte[] input, int connection);
+        public void ReceivePlayerInput(SInput[] input, int connection);
     }
 }

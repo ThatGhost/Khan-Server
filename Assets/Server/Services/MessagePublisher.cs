@@ -6,17 +6,18 @@ using Khan_Shared.Networking;
 using Networking.Core;
 using Zenject;
 
+using ConnectionId = System.Int32;
+
 namespace Networking.Services
 {
     public class MessagePublisher : IMessagePublisher
     {
         [Inject] private readonly IMessageQueue m_messageQueue;
 
-
-        private Dictionary<int,Queue<Message>> m_highPrioQueue = new Dictionary<int,Queue<Message>>();
-        private Dictionary<int,Queue<Message>> m_mediumPrioQueue = new Dictionary<int,Queue<Message>>();
-        private Dictionary<int,Queue<Message>> m_lowPrioQueue = new Dictionary<int,Queue<Message>>();
-        private List<int> m_connections = new List<int>();
+        private Dictionary<ConnectionId, Queue<Message>> m_highPrioQueue = new Dictionary<int,Queue<Message>>();
+        private Dictionary<ConnectionId, Queue<Message>> m_mediumPrioQueue = new Dictionary<int,Queue<Message>>();
+        private Dictionary<ConnectionId, Queue<Message>> m_lowPrioQueue = new Dictionary<int,Queue<Message>>();
+        private List<ConnectionId> m_connections = new List<int>();
         private readonly int maxBigMessageSize = 512;
 
         private MessagePublisher()
@@ -65,7 +66,7 @@ namespace Networking.Services
             }
         }
 
-        public void PublishMessage(Message msg, int connection)
+        public void PublishMessage(Message msg, ConnectionId connection)
         {
             if (!m_connections.Contains(connection))
             {

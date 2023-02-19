@@ -32,6 +32,7 @@ public class MonoServerInstaller : MonoInstaller
     {
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
+        Container.Bind<Networking.Services.ILogger>().To<Networking.Services.Logger>().AsSingle();
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
     }
 

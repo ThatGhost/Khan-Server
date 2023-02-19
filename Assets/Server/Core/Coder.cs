@@ -101,13 +101,14 @@ namespace Networking.Core
                     break;
                 case DataType.Varied:
                     byte[] bytes = (byte[])obj;
-                    if (bytes.Length < 3) throw new Exception("Lenght of varied datatype to short");
+                    if (bytes.Length == 0) throw new Exception("Lenght of varied datatype to short");
+                    if (bytes.Length > 400) throw new Exception("Lenght of varied datatype to big");
 
-                    ushort size = BitConverter.ToUInt16(new byte[2] { bytes[0], bytes[1] });
+                    ushort size = (ushort)bytes.Length;
                     writer.WriteUShort(size);
                     for (int i = 0; i < size; i++)
                     {
-                        writer.WriteByte(bytes[i + 2]);
+                        writer.WriteByte(bytes[i]);
                     }
                     break;
             }

@@ -6,8 +6,6 @@ using Networking.Behaviours;
 using Networking.Core;
 using Zenject;
 
-using UnityEngine;
-
 namespace Networking.Services
 {
     public class FooService : IFooService
