@@ -1,4 +1,5 @@
 ﻿using System;
+using Khan_Shared.Simulation;
 
 namespace Networking.Behaviours
 {
@@ -9,6 +10,6 @@ namespace Networking.Behaviours
 
     public interface IPlayerPositionBehaviour
     {
-        public void updateInput(byte[] inputs);
+        public void updateInput(SInput[] inputs);
     }
 }
