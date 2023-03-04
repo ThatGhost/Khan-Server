@@ -11,10 +11,9 @@ public class MonoServerInstaller : MonoInstaller
     public GameObject server;
     public override void InstallBindings()
     {
-        // Core
+        Container.BindInterfacesAndSelfTo<GameServer>().AsSingle();
         Container.Bind<ICoder>().To<Coder>().AsSingle();
         Container.Bind<IMessageQueue>().To<MessageQueue>().AsSingle();
-        Container.Bind<IGameServer>().To<GameServer>().AsSingle();
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
 
         registerEntryPoints();
@@ -31,6 +30,7 @@ public class MonoServerInstaller : MonoInstaller
     private void registerServices()
     {
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
+        Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsSingle();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
         Container.Bind<Networking.Services.ILogger>().To<Networking.Services.Logger>().AsSingle();
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();

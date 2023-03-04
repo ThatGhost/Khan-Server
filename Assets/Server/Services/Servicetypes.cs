@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Khan_Shared.Networking;
 using Khan_Shared.Simulation;
 
@@ -7,6 +8,11 @@ namespace Networking.Services
     public interface IFooService
     {
         public void Foo(uint data, byte[] other, int conn);
+    }
+
+    public interface IMonoHelper
+    {
+        public void StartCourotine(IEnumerator enumerator);
     }
 
     public interface IMessagePublisher

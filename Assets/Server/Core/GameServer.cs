@@ -8,11 +8,12 @@ using Unity.Networking.Transport.Utilities;
 using Zenject;
 
 using Khan_Shared.Networking;
+using Networking.Services;
 using static Networking.Core.GameServer;
 
 namespace Networking.Core
 {
-    public class GameServer : MonoBehaviour, IGameServer
+    public class GameServer : IGameServer, IInitializable, IFixedTickable, ILateDisposable
     {
         private NetworkDriver m_networkDriver;
         private NativeList<NetworkConnection> m_connections;
@@ -31,6 +32,7 @@ namespace Networking.Core
         public static OnClientDisconnect onClientDisconnect;
 
         [Inject] private readonly IMessageQueue m_messageQueue;
+        [Inject] private readonly IMonoHelper m_monoHelper;
 
         public int Tick
         {
@@ -40,8 +42,10 @@ namespace Networking.Core
             }
         }
 
-        private void Start()
+        public void Initialize()
         {
+            Debug.Log("Server Initializing");
+
             m_networkDriver = NetworkDriver.Create();
             m_updatePipeline = m_networkDriver.CreatePipeline();
             m_relaiblePipeline = m_networkDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
@@ -58,9 +62,10 @@ namespace Networking.Core
             }
             m_connections = new NativeList<NetworkConnection>(NetworkingCofigurations.g_maxPlayers, Allocator.Persistent);
             m_messageQueue.Init();
+            Debug.Log("Server Initialized");
         }
 
-        private void FixedUpdate()
+        public void FixedTick()
         {
             m_networkDriver.ScheduleUpdate().Complete();
             cleanUpConnections();
@@ -76,7 +81,7 @@ namespace Networking.Core
             m_tick++;
         }
 
-        private void OnDestroy()
+        public void LateDispose()
         {
             if (m_networkDriver.IsCreated)
             {
@@ -103,7 +108,7 @@ namespace Networking.Core
             while ((conn = m_networkDriver.Accept()) != default(NetworkConnection))
             {
                 m_connections.Add(conn);
-                StartCoroutine(clientConnectWhaitTime(conn.InternalId));
+                m_monoHelper.StartCourotine(clientConnectWhaitTime(conn.InternalId));
             }
         }
 
