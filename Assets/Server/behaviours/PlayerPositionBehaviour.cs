@@ -8,13 +8,15 @@ namespace Networking.Behaviours
     {
         [SerializeField] private int m_speed;
         [SerializeField] private int m_jumpHeight;
-        [SerializeField] private Transform m_camera;
+        [SerializeField] private Transform m_face;
 
         private PositionVector m_bigPosition;
         private short m_bigRotX;
         private short m_bigRotY;
 
         private int m_realSpeed;
+
+        public Vector2 FaceRotation => new Vector2(m_bigRotX / SimulationConfiguration.g_MouseGranulairity, m_bigRotY / SimulationConfiguration.g_MouseGranulairity);
 
         private void OnValidate()
         {
@@ -35,7 +37,7 @@ namespace Networking.Behaviours
         private void Update()
         {
             gameObject.transform.position = positionVectorToVector3(m_bigPosition);
-            m_camera.rotation = Quaternion.Euler(new Vector3()
+            m_face.rotation = Quaternion.Euler(new Vector3()
             {
                 x = (float)(m_bigRotX / SimulationConfiguration.g_MouseGranulairity),
                 y = (float)(m_bigRotY / SimulationConfiguration.g_MouseGranulairity),

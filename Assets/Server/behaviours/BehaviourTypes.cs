@@ -1,5 +1,6 @@
 ﻿using System;
 using Khan_Shared.Simulation;
+using UnityEngine;
 
 namespace Networking.Behaviours
 {
@@ -11,5 +12,6 @@ namespace Networking.Behaviours
     public interface IPlayerPositionBehaviour
     {
         public void updateInput(SInput[] inputs);
+        public Vector2 FaceRotation { get; }
     }
 }

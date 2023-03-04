@@ -45,7 +45,7 @@ namespace Networking.Services
                 while (m_mediumPrioQueue[connection].Count > 0)
                 {
                     int newBigMessageSize = bigMessageSize +
-                        NetworkingCofigurations.getSizeOfMessage(m_highPrioQueue[connection].Peek());
+                        NetworkingCofigurations.getSizeOfMessage(m_mediumPrioQueue[connection].Peek());
                     if (newBigMessageSize > maxBigMessageSize) break;
 
                     bigMessageSize = newBigMessageSize;

@@ -44,8 +44,6 @@ namespace Networking.Core
 
         public void Initialize()
         {
-            Debug.Log("Server Initializing");
-
             m_networkDriver = NetworkDriver.Create();
             m_updatePipeline = m_networkDriver.CreatePipeline();
             m_relaiblePipeline = m_networkDriver.CreatePipeline(typeof(ReliableSequencedPipelineStage));
@@ -114,7 +112,7 @@ namespace Networking.Core
 
         private IEnumerator clientConnectWhaitTime(int conn)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0f);
             Debug.Log($"Client connected {conn}");
             if (GameServer.onClientConnect != null)
                GameServer.onClientConnect.Invoke(conn);
