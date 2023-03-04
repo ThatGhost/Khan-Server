@@ -11,7 +11,7 @@ public class MonoServerInstaller : MonoInstaller
     public GameObject server;
     public override void InstallBindings()
     {
-        Container.BindInterfacesAndSelfTo<GameServer>().AsSingle();
+        Container.BindInterfacesAndSelfTo<GameServer>().AsSingle().NonLazy();
         Container.Bind<ICoder>().To<Coder>().AsSingle();
         Container.Bind<IMessageQueue>().To<MessageQueue>().AsSingle();
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
