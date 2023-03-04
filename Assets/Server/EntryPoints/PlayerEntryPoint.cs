@@ -17,14 +17,13 @@ namespace Networking.EntryPoints
         {
             p_messages = new MessageFunctionPair[]
             {
-                new MessageFunctionPair(MessageTypes.PositionData, onInput),
+                new MessageFunctionPair(MessageTypes.InputData, onInput),
             };
         }
 
         private void onInput(object[] data, int connection)
         {
-            byte[] rawData = (byte[])data[0];
-            byte[] usableData = ((byte[])(data[0])).Skip(2).ToArray();
+            byte[] usableData = ((byte[])data[0]).Skip(2).ToArray();
             List<SInput> inputs = new List<SInput>();
             for (int i = 0; i < usableData.Length; i += 5)
             {

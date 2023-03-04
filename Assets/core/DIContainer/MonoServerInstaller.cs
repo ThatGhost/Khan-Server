@@ -8,18 +8,21 @@ using Zenject;
 
 public class MonoServerInstaller : MonoInstaller
 {
-    public GameObject server;
+    public GameObject playerPrefab;
+    public Transform g_root;
+
     public override void InstallBindings()
     {
-        // Core
+        Container.BindInterfacesAndSelfTo<GameServer>().AsSingle().NonLazy();
         Container.Bind<ICoder>().To<Coder>().AsSingle();
         Container.Bind<IMessageQueue>().To<MessageQueue>().AsSingle();
-        Container.Bind<IGameServer>().To<GameServer>().AsSingle();
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
+        Container.BindInstance<Transform>(g_root);
 
         registerEntryPoints();
         registerServices();
         registerBehaviours();
+        registerFactories();
     }
 
     private void registerEntryPoints()
@@ -31,15 +34,25 @@ public class MonoServerInstaller : MonoInstaller
     private void registerServices()
     {
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
-        Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
+        Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsSingle();
         Container.Bind<Networking.Services.ILogger>().To<Networking.Services.Logger>().AsSingle();
+
+        Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsSingle().NonLazy();
+        Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
+
+        Container.Bind<PlayersController>().AsSingle().NonLazy();
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
+        Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
     }
 
     private void registerBehaviours()
     {
         //Container.Bind<ITestBehaviour>().To<TestBehaviour>().FromComponentOn(server).AsSingle();
-        Container.Bind<IPlayerPositionBehaviour>().To<PlayerPositionBehaviour>().FromComponentOn(server).AsSingle();
+    }
+
+    private void registerFactories()
+    {
+        Container.BindFactory<PlayerBehaviour, PlayerBehaviour.Factory>().FromComponentInNewPrefab(playerPrefab);
     }
 }
 
