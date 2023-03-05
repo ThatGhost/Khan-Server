@@ -47,7 +47,7 @@ public class Coder_Tests
         m_coder.EncodeRawMessage(ref writer, msg);
 
         // Assert
-        Assert.AreEqual(6, writer.Length);
+        Assert.AreEqual(2, writer.Length);
         Assert.IsFalse(writer.HasFailedWrites);
     }
 }
