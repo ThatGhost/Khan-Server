@@ -11,10 +11,10 @@ namespace Networking.Services
 
     public interface IMonoHelper
     {
-        public void StartCourotine(IEnumerator enumerator);
+        public void StartCoroutine(IEnumerator enumerator);
     }
 
-    public interface ILogger
+    public interface ILoggerService
     {
         public void LogMessage(string message);
         public void LogError(string message);

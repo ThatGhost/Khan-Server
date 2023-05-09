@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3287369643490303215}
   - component: {fileID: 6336837352652804006}
   - component: {fileID: 6366498254127225000}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -118,7 +118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8657024530243258358}
   - component: {fileID: 8657024530243258359}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Face
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,7 +153,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_lenght: 1.5
-  m_color: {r: 0.754717, g: 0.1459594, b: 0.1459594, a: 0}
 --- !u!1 &8657024531877707705
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,7 +164,7 @@ GameObject:
   - component: {fileID: 8657024531877707710}
   - component: {fileID: 8657024531877707708}
   - component: {fileID: 8657024531877707711}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}

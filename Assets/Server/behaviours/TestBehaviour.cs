@@ -1,21 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Zenject;
 
 namespace Networking.Behaviours
 {
-    public class TestBehaviour : MonoBehaviour, ITestBehaviour
+    public class TestBehaviour : MonoBehaviour
     {
-        private bool m_move = false;
-        public void doSomething()
-        {
-            m_move = true;
-        }
+        [Inject] private readonly Spell_Fire_FlameTower.Factory factory;
+        [Inject] private Transform g_root;
 
         private void Update()
         {
-            if (m_move)
+            if (Input.GetKeyDown("c"))
             {
-                gameObject.transform.position += new Vector3(0, 1 * Time.deltaTime, 0);
+                Spell_Fire_FlameTower flameTower = factory.Create();
+                flameTower.gameObject.transform.SetParent(g_root);
+                flameTower.gameObject.transform.position = Vector3.zero;
             }
         }
     }

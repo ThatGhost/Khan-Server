@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -301,6 +302,18 @@ Transform:
   m_Father: {fileID: 1848088124}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 28.241, y: 0, z: 0}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02cfa9707f474528bd2bed8f8992af7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1153933245
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,8 +490,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9fb0c2e46afd4229b2b3ca90bc576f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 8657024530226801537, guid: fded64c9209e34dce90d810f01679876, type: 3}
   g_root: {fileID: 1848088124}
+  playerPrefab: {fileID: 8657024530226801537, guid: fded64c9209e34dce90d810f01679876, type: 3}
+  spell_Fire_FlameTower: {fileID: 3836713156113414192, guid: 8fde41d6d48a34d65ade74e0037cafc7, type: 3}
 --- !u!114 &1704761315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -500,6 +514,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1848088124}
+  - component: {fileID: 1848088125}
   m_Layer: 0
   m_Name: root
   m_TagString: Untagged
@@ -525,3 +540,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1848088125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848088123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d02cfa9707f474528bd2bed8f8992af7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

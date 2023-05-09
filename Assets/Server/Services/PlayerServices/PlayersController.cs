@@ -35,6 +35,15 @@ namespace Networking.Services
             return null;
         }
 
+        public PlayerRefrenceObject? getPlayer(GameObject gameObject)
+        {
+            foreach (var player in m_playerRefrences)
+            {
+                if (player.Value._gameObject == gameObject) return player.Value;
+            }
+            return null;
+        }
+
         public PlayerRefrenceObject[] getPlayers()
         {
             return m_playerRefrences.Select(p => p.Value).ToArray();

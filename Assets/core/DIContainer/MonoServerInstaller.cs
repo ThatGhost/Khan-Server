@@ -8,8 +8,12 @@ using Zenject;
 
 public class MonoServerInstaller : MonoInstaller
 {
-    public GameObject playerPrefab;
+    // root
     public Transform g_root;
+
+    // prefabs
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject spell_Fire_FlameTower;
 
     public override void InstallBindings()
     {
@@ -34,8 +38,8 @@ public class MonoServerInstaller : MonoInstaller
     private void registerServices()
     {
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
-        Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsSingle();
-        Container.Bind<Networking.Services.ILogger>().To<Networking.Services.Logger>().AsSingle();
+        Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsTransient();
+        Container.Bind<ILoggerService>().To<LoggerService>().AsSingle();
 
         Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsSingle().NonLazy();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
@@ -43,16 +47,21 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<PlayersController>().AsSingle().NonLazy();
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
+
+        Container.Bind<ISpellUtil_BasicTimer>().To<SpellUtil_BasicTimer>().AsTransient();
     }
 
     private void registerBehaviours()
     {
-        //Container.Bind<ITestBehaviour>().To<TestBehaviour>().FromComponentOn(server).AsSingle();
+        Container.Bind<TestBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
     }
 
     private void registerFactories()
     {
         Container.BindFactory<PlayerBehaviour, PlayerBehaviour.Factory>().FromComponentInNewPrefab(playerPrefab);
+
+        // spells
+        Container.BindFactory<Spell_Fire_FlameTower, Spell_Fire_FlameTower.Factory>().FromComponentInNewPrefab(spell_Fire_FlameTower);
     }
 }
 

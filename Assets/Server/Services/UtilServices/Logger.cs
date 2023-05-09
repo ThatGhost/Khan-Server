@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Networking.Services
 {
-    public class Logger : ILogger
+    public class LoggerService : ILoggerService
     {
         public void LogMessage(string message)
         {
