@@ -31,8 +31,16 @@ namespace Networking.Services
             PlayerBehaviour playerhook = m_playerFactory.Create();
             playerhook.gameObject.transform.SetParent(g_root);
             m_playersController.AddPlayer(playerhook, connection);
+
+            initializeMessageQueue(connection);
             sendNewClientOtherClients(connection, playerhook.transform);
             sendOtherClientsNewClient(connection, playerhook.transform);
+        }
+
+        private void initializeMessageQueue(int newconnection)
+        {
+            Message msg = new Message(MessageTypes.Default);
+            m_messagePublisher.PublishMessage(msg, newconnection);
         }
 
         private void sendNewClientOtherClients(int newconnection, Transform newClientTransform)
@@ -59,18 +67,15 @@ namespace Networking.Services
                 throw new System.Exception("new player was not created!");
 
             PlayerRefrenceObject[] otherPlayers = m_playersController.getPlayers().Where(p => p._connectionId != newconnection).ToArray();
-            foreach (var player in otherPlayers)
-            {
-                object[] data = new object[]
+            object[] data = new object[]
                 {
                     (ushort)newPlayer.Value._connectionId,
                     (float)newPlayer.Value._gameObject.transform.position.x,
                     (float)newPlayer.Value._gameObject.transform.position.y,
                     (float)newPlayer.Value._gameObject.transform.position.z,
                 };
-                Message msg = new Message(MessageTypes.SpawnPlayer, data, MessagePriorities.high, true);
-                m_messagePublisher.PublishMessage(msg, player._connectionId);
-            }
+            Message msg = new Message(MessageTypes.SpawnPlayer, data, MessagePriorities.high, true);
+            m_messagePublisher.PublishGlobalMessage(msg);
         }
     }
 }

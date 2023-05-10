@@ -95,19 +95,19 @@ namespace Networking.Services
             switch (msg.Priority)
             {
                 case MessagePriorities.high:
-                    foreach (KeyValuePair<int, Queue<Message>> conn in m_highPrioQueue)
+                    foreach (KeyValuePair<ConnectionId, Queue<Message>> conn in m_highPrioQueue)
                     {
                         conn.Value.Enqueue(msg);
                     }
                     break;
                 case MessagePriorities.medium:
-                    foreach (KeyValuePair<int, Queue<Message>> conn in m_mediumPrioQueue)
+                    foreach (KeyValuePair<ConnectionId, Queue<Message>> conn in m_mediumPrioQueue)
                     {
                         conn.Value.Enqueue(msg);
                     }
                     break;
                 case MessagePriorities.low:
-                    foreach (KeyValuePair<int, Queue<Message>> conn in m_lowPrioQueue)
+                    foreach (KeyValuePair<ConnectionId, Queue<Message>> conn in m_lowPrioQueue)
                     {
                         conn.Value.Enqueue(msg);
                     }

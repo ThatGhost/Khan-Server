@@ -33,7 +33,7 @@ namespace Networking.Behaviours
             if (onFireStart != null) onFireStart.Invoke();
             yield return new WaitForSecondsRealtime(fireTime);
             if (onFireEnd != null) onFireEnd.Invoke();
-            m_monoHelpers.StartCoroutine(fire(fireTime, endTime));
+            m_monoHelpers.StartCoroutine(end(endTime));
         }
 
         private IEnumerator end(float endTime)

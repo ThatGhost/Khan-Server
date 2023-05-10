@@ -8,7 +8,7 @@ using Networking.Behaviours;
 
 public class Spell_Fire_FlameTower : MonoBehaviour
 {
-    private readonly float m_startUpDuration = 4; //in seconds
+    private readonly float m_startUpDuration = 5; //in seconds
     private readonly float m_fireDuration = 2.5f;
     private readonly float m_endDuration = 1.5f;
 
@@ -26,7 +26,6 @@ public class Spell_Fire_FlameTower : MonoBehaviour
 
     void OnEnable()
     {
-        m_logger.LogMessage($"enable");
         m_basicTimerUtil.start(m_startUpDuration, m_fireDuration, m_endDuration);
     }
 
@@ -42,15 +41,14 @@ public class Spell_Fire_FlameTower : MonoBehaviour
 
     void OnEnd()
     {
-        // release from pool
+        // release to pool
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        m_logger.LogMessage($"coll");
         PlayerRefrenceObject? player = m_playersController.getPlayer(collision.gameObject);
 
-        if (player != null) return;
+        if (player == null) return;
         if (m_playersInCollider.Exists(p => p == player.Value._connectionId)) return;
 
         m_playersInCollider.Add(player.Value._connectionId);
@@ -60,7 +58,7 @@ public class Spell_Fire_FlameTower : MonoBehaviour
     {
         PlayerRefrenceObject? player = m_playersController.getPlayer(collision.gameObject);
 
-        if (player != null) return;
+        if (player == null) return;
         if (!m_playersInCollider.Exists(p => p == player.Value._connectionId)) return;
 
         m_playersInCollider.Remove(player.Value._connectionId);
