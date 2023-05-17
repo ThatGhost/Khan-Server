@@ -20,7 +20,7 @@ namespace Networking.Behaviours
                 flameTower.gameObject.transform.SetParent(g_root);
                 flameTower.gameObject.transform.position = Vector3.zero;
 
-                Message msg = new Message(MessageTypes.AOESpell, new object[] { (ushort)(1), 0f, 0f, 0f }, MessagePriorities.medium);
+                Message msg = new Message(MessageTypes.SpellTrigger, new object[] { (ushort)(1), 0f, 0f, 0f }, MessagePriorities.medium);
                 m_messagePublisher.PublishGlobalMessage(msg);
             }
         }
