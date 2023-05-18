@@ -41,9 +41,9 @@ namespace Networking.Services
                 (ushort)connection,
                 (ushort)m_currentPlayerSpellId,
                 (ushort)spellId,
-                (ushort)modifierIds[0],
-                (ushort)modifierIds[1],
-                (ushort)modifierIds[2],
+                (uint)modifierIds[0],
+                (uint)modifierIds[1],
+                (uint)modifierIds[2],
             } ,MessagePriorities.high, true);
             m_messagePublisher.PublishGlobalMessage(initializeSpellMessage);
 

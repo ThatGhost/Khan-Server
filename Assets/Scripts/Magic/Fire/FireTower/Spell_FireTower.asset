@@ -15,6 +15,7 @@ MonoBehaviour:
   p_rules:
   - {fileID: 11400000, guid: 18bead43af10c4fe1bf22b5f7297c3f3, type: 2}
   prefab: {fileID: 4354003001387672857, guid: 9e3104dbecf97406e8e28ee83f410678, type: 3}
+  spellId: 1
   size: 5
   color: {r: 0.8584906, g: 0.10933607, b: 0.10933607, a: 1}
   animationSpeed: 1

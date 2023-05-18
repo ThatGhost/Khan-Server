@@ -34,6 +34,7 @@ namespace Networking.Services
             playerhook.gameObject.transform.SetParent(g_root);
             m_playersController.AddPlayer(playerhook, connection);
 
+            sendHandShake(connection);
             sendNewClientOtherClients(connection, playerhook.transform);
             sendOtherClientsNewClient(connection, playerhook.transform);
         }
@@ -77,6 +78,12 @@ namespace Networking.Services
                 };
             Message msg = new Message(MessageTypes.SpawnPlayer, data, MessagePriorities.high, true);
             m_messagePublisher.PublishGlobalMessage(msg);
+        }
+
+        private void sendHandShake(int newconnection)
+        {
+            Message handshakeMessage = new Message(MessageTypes.HandShake, new object[] {(ushort)newconnection}, MessagePriorities.high, true);
+            m_messagePublisher.PublishMessage(handshakeMessage, newconnection);
         }
     }
 }

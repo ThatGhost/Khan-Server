@@ -14,7 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fire_FireTower:
     spell: {fileID: 11400000, guid: 76f8088e4492047319ef2b4faec9de38, type: 2}
-    spellId: 1
     modifiers:
-    - modifier: {fileID: 11400000, guid: afd89e214aea64455abac73374a3fd55, type: 2}
-      modifierId: 1
+    - {fileID: 11400000, guid: afd89e214aea64455abac73374a3fd55, type: 2}

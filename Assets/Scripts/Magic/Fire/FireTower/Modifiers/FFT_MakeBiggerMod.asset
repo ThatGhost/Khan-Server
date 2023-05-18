@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cf8c39ff3478430f845d12c6ecbf9ba, type: 3}
   m_Name: FFT_MakeBiggerMod
   m_EditorClassIdentifier: 
+  modifierId: 1
   sizeMultiplier: 2
