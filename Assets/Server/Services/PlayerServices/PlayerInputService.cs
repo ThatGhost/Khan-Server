@@ -9,7 +9,7 @@ namespace Networking.Services
     public class PlayerInputService : IPlayerInputService
     {
         [Inject] private readonly ILoggerService logger;
-        [Inject] private readonly PlayersController m_playersController;
+        [Inject] private readonly IPlayersController m_playersController;
 
         public void ReceivePlayerInput(SInput[] input, int connection)
         {

@@ -13,7 +13,7 @@ namespace Networking.Services
     {
         [Inject] private Transform g_root;
         [Inject] private readonly PlayerBehaviour.Factory m_playerFactory;
-        [Inject] private readonly PlayersController m_playersController;
+        [Inject] private readonly IPlayersController m_playersController;
         [Inject] private readonly IMessagePublisher m_messagePublisher;
 
         public void Initialize()
@@ -28,11 +28,12 @@ namespace Networking.Services
 
         private void onClientConnect(int connection)
         {
+            initializeMessageQueue(connection);
+
             PlayerBehaviour playerhook = m_playerFactory.Create();
             playerhook.gameObject.transform.SetParent(g_root);
             m_playersController.AddPlayer(playerhook, connection);
 
-            initializeMessageQueue(connection);
             sendNewClientOtherClients(connection, playerhook.transform);
             sendOtherClientsNewClient(connection, playerhook.transform);
         }

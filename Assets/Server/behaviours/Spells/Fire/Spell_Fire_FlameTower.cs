@@ -15,7 +15,7 @@ public class Spell_Fire_FlameTower : MonoBehaviour
     private List<ConnectionId> m_playersInCollider = new List<ConnectionId>();
 
     [Inject] private readonly ISpellUtil_BasicTimer m_basicTimerUtil;
-    [Inject] private readonly PlayersController m_playersController;
+    [Inject] private readonly IPlayersController m_playersController;
     [Inject] private readonly ILoggerService m_logger;
 
     private void Awake()

@@ -22,6 +22,7 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IMessageQueue>().To<MessageQueue>().AsSingle();
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
         Container.BindInstance<Transform>(g_root);
+        //Container.BindInstance<DiContainer>(Container);
 
         registerEntryPoints();
         registerServices();
@@ -40,14 +41,12 @@ public class MonoServerInstaller : MonoInstaller
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
         Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsTransient();
         Container.Bind<ILoggerService>().To<LoggerService>().AsSingle();
-
         Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsSingle().NonLazy();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
-
-        Container.Bind<PlayersController>().AsSingle().NonLazy();
+        Container.Bind<IPlayersController>().To<PlayersController>().AsSingle().NonLazy();
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
-
+        Container.Bind<ISpellInitializer>().To<SpellInitializer>().AsSingle();
         Container.Bind<ISpellUtil_BasicTimer>().To<SpellUtil_BasicTimer>().AsTransient();
     }
 
@@ -68,6 +67,7 @@ public class MonoServerInstaller : MonoInstaller
 /*
  * Bind<> for basic binding
  * BindExicutionOrder<> for order dependent
+ * Con
  * BindInterfaces...<> for multiple interfaces to 1 obj
  * 
  * To<> for basic binding
