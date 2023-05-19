@@ -1,16 +1,19 @@
 using Khan_Shared.Magic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "FFT_MakeBiggerMod", menuName = "Magic/Fire/FireTower/Mods/FFT_MakeBiggerMod")]
-public class Modifier_FireTower_MakeBigger : SpellModifier
+namespace Server.Magic
 {
-    public float sizeMultiplier = 1;
-
-    public override void ModifySpell(Spell spell)
+    [CreateAssetMenu(fileName = "FFT_MakeBiggerMod", menuName = "Magic/Fire/FireTower/Mods/FFT_MakeBiggerMod")]
+    public class Modifier_FireTower_MakeBigger : SpellModifier
     {
-        if(spell is Spell_FireTower fireTower)
+        public float sizeMultiplier = 1;
+
+        public override void ModifySpell(Spell spell)
         {
-            fireTower.size *= sizeMultiplier;
+            if (spell is Spell_FireTower fireTower)
+            {
+                fireTower.size *= sizeMultiplier;
+            }
         }
     }
 }

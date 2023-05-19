@@ -19,3 +19,5 @@ MonoBehaviour:
   size: 5
   color: {r: 0.8584906, g: 0.10933607, b: 0.10933607, a: 1}
   animationSpeed: 1
+  coolDownTime: 1
+  enabled: 1

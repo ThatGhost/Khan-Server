@@ -16,8 +16,9 @@ namespace Networking.Services
             Nullable<PlayerRefrenceObject> playerRefrenceObject = m_playersController.getPlayer(connection);
             if (playerRefrenceObject == null)
                 throw new Exception("err.services.player.notfoud");
-            else
-                playerRefrenceObject.Value._playerPositionBehaviour.updateInput(input);
+            
+            playerRefrenceObject.Value._playerPositionBehaviour.receiveInput(input);
+            playerRefrenceObject.Value._playerSpellController.receiveInput(input);
         }
     }
 }

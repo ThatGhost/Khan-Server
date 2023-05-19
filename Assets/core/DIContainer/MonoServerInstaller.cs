@@ -5,6 +5,7 @@ using Networking.EntryPoints;
 
 using UnityEngine;
 using Zenject;
+using Server.Magic;
 
 public class MonoServerInstaller : MonoInstaller
 {
@@ -22,7 +23,6 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IMessageQueue>().To<MessageQueue>().AsSingle();
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
         Container.BindInstance<Transform>(g_root);
-        //Container.BindInstance<DiContainer>(Container);
 
         registerEntryPoints();
         registerServices();
@@ -47,7 +47,7 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
         Container.Bind<ISpellInitializer>().To<SpellInitializer>().AsSingle();
-        Container.Bind<ISpellUtil_BasicTimer>().To<SpellUtil_BasicTimer>().AsTransient();
+        Container.Bind<IClickTypeCalculator>().To<ClickTypeCalculator>().AsTransient();
     }
 
     private void registerBehaviours()
@@ -58,9 +58,6 @@ public class MonoServerInstaller : MonoInstaller
     private void registerFactories()
     {
         Container.BindFactory<PlayerBehaviour, PlayerBehaviour.Factory>().FromComponentInNewPrefab(playerPrefab);
-
-        // spells
-        Container.BindFactory<Spell_Fire_FlameTower, Spell_Fire_FlameTower.Factory>().FromComponentInNewPrefab(spell_Fire_FlameTower);
     }
 }
 
@@ -78,6 +75,6 @@ public class MonoServerInstaller : MonoInstaller
  * 
  * AsSingle() for basic 1-1 binding
  * AsTransient() new obj every inject
- * AsCached() for chaches
+ * AsCached() for singleton for the same contract type
  * https://github.com/modesttree/Zenject/blob/master/Documentation/CheatSheet.md
  */

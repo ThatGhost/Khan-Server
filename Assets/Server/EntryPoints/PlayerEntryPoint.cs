@@ -25,11 +25,11 @@ namespace Networking.EntryPoints
         {
             byte[] usableData = ((byte[])data[0]).Skip(2).ToArray();
             List<SInput> inputs = new List<SInput>();
-            for (int i = 0; i < usableData.Length; i += 5)
+            for (int i = 0; i < usableData.Length; i += 6)
             {
-                byte keys = usableData[i + 0];
-                short x = BitConverter.ToInt16(new byte[2] { usableData[i + 1], usableData[i + 2] });
-                short y = BitConverter.ToInt16(new byte[2] { usableData[i + 3], usableData[i + 4] });
+                ushort keys = BitConverter.ToUInt16(new byte[2] { usableData[i + 0], usableData[i + 1] });
+                short x = BitConverter.ToInt16(new byte[2] { usableData[i + 2], usableData[i + 3] });
+                short y = BitConverter.ToInt16(new byte[2] { usableData[i + 4], usableData[i + 5] });
 
                 inputs.Add(new SInput()
                 {

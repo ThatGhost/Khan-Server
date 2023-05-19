@@ -45,14 +45,14 @@ namespace Networking.Behaviours
             });
         }
 
-        public void updateInput(SInput[] inputs)
+        public void receiveInput(SInput[] inputs)
         {
             PositionVector fullInputVector = new PositionVector();
             short fullx = 0;
             short fully = 0;
             foreach (var input in inputs)
             {
-                fullInputVector += PlayerMovement.calculatePosition((byte)input.keys, m_realSpeed, m_jumpHeight, true);
+                fullInputVector += PlayerMovement.calculatePosition((ushort)input.keys, m_realSpeed, m_jumpHeight, true);
                 fullx = input.x;
                 fully = input.y;
             }

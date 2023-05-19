@@ -23,8 +23,8 @@ namespace Networking.Services
 
     public interface IPlayerSpellController
     {
-        public void addSpell(Spell spell, int playerSpellId);
-        public void triggerSpell(int playerSpellId);
+        public void receiveInput(SInput[] inputs);
+        public void addSpell(int key, PlayerSpell playerSpell);
     }
 
     public struct PlayerRefrenceObject
@@ -34,5 +34,11 @@ namespace Networking.Services
         public PlayerBehaviour _playerBehaviour;
         public PlayerPositionBehaviour _playerPositionBehaviour;
         public IPlayerSpellController _playerSpellController;
+    }
+
+    public struct PlayerSpell
+    {
+        public Spell spell;
+        public int playerSpellId;
     }
 }

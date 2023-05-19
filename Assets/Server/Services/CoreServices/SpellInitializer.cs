@@ -14,6 +14,7 @@ namespace Networking.Services
         [Inject] private readonly DiContainer m_container;
         [Inject] private readonly IPlayersController m_playerController;
         [Inject] private readonly IMessagePublisher m_messagePublisher;
+        [Inject] private readonly IMonoHelper m_monoHelper;
 
         private int m_currentPlayerSpellId = 1;
 
@@ -27,14 +28,24 @@ namespace Networking.Services
 
         public void InitializeSpells(ConnectionId connection)
         {
+            // TEMP -- until outside spell storage per player
             Spell spell = m_container.ResolveId<Spell>(spellId);
+
+            Spell instanceOfSpell = (Spell)(m_monoHelper.Instantiate(spell));
+            m_container.Inject(instanceOfSpell);
+
             foreach (var modifierId in modifierIds)
             {
                 SpellModifier modifier = m_container.ResolveId<SpellModifier>(modifierId);
-                modifier.ModifySpell(spell);
+                instanceOfSpell.ApplyModifiers(modifier);
             }
+            instanceOfSpell.Initialize(connection, m_currentPlayerSpellId);
 
-            m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(spell, m_currentPlayerSpellId);
+            m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(0, new PlayerSpell()
+            {
+                spell = instanceOfSpell,
+                playerSpellId = m_currentPlayerSpellId,
+            });
 
             Message initializeSpellMessage = new Message(MessageTypes.InitializeSpell, new object[]
             {
@@ -46,8 +57,8 @@ namespace Networking.Services
                 (uint)modifierIds[2],
             } ,MessagePriorities.high, true);
             m_messagePublisher.PublishGlobalMessage(initializeSpellMessage);
-
             m_currentPlayerSpellId++;
+            // -- TEMP
         }
     }
 }

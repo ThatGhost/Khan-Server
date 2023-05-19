@@ -11,5 +11,10 @@ namespace Networking.Services
         {
             base.StartCoroutine(enumerator);
         }
+
+        public new Object Instantiate(Object o)
+        {
+            return MonoBehaviour.Instantiate(o);
+        }
     }
 }

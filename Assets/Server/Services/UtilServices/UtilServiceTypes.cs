@@ -12,6 +12,7 @@ namespace Networking.Services
     public interface IMonoHelper
     {
         public void StartCoroutine(IEnumerator enumerator);
+        public Object Instantiate(Object o);
     }
 
     public interface ILoggerService
