@@ -13,7 +13,6 @@ namespace Networking.Services
 {
     public class PlayersController: IPlayersController
     {
-        [Inject] private readonly ISpellInitializer m_spellInitializer;
         private Dictionary<ConnectionId, PlayerRefrenceObject> m_playerRefrences = new Dictionary<ConnectionId, PlayerRefrenceObject>();
 
         public void AddPlayer(PlayerBehaviour playerBehaviour, ConnectionId connection)
@@ -27,9 +26,6 @@ namespace Networking.Services
                 playerRefrenceObject._playerPositionBehaviour = playerRefrenceObject._gameObject.GetComponent<PlayerPositionBehaviour>();
                 playerRefrenceObject._playerSpellController = playerBehaviour.m_playerSpellController;
                 m_playerRefrences.Add(connection, playerRefrenceObject);
-
-                // give spells to player
-                m_spellInitializer.InitializeSpells(connection);
             }
         }
 

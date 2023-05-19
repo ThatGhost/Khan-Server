@@ -15,6 +15,7 @@ namespace Networking.Services
         [Inject] private readonly PlayerBehaviour.Factory m_playerFactory;
         [Inject] private readonly IPlayersController m_playersController;
         [Inject] private readonly IMessagePublisher m_messagePublisher;
+        [Inject] private readonly ISpellInitializer m_spellInitializer;
 
         public void Initialize()
         {
@@ -35,8 +36,9 @@ namespace Networking.Services
             m_playersController.AddPlayer(playerhook, connection);
 
             sendHandShake(connection);
-            sendNewClientOtherClients(connection, playerhook.transform);
-            sendOtherClientsNewClient(connection, playerhook.transform);
+            sendNewClientOtherClients(connection);
+            sendOtherClientsNewClient(connection);
+            m_spellInitializer.InitializeSpells(connection);
         }
 
         private void initializeMessageQueue(int newconnection)
@@ -45,7 +47,7 @@ namespace Networking.Services
             m_messagePublisher.PublishMessage(msg, newconnection);
         }
 
-        private void sendNewClientOtherClients(int newconnection, Transform newClientTransform)
+        private void sendNewClientOtherClients(int newconnection)
         {
             PlayerRefrenceObject[] otherPlayers = m_playersController.getPlayers().Where(p => p._connectionId != newconnection).ToArray();
             foreach (var player in otherPlayers)
@@ -62,22 +64,25 @@ namespace Networking.Services
             }
         }
 
-        private void sendOtherClientsNewClient(int newconnection, Transform newClientTransform)
+        private void sendOtherClientsNewClient(int newconnection)
         {
             PlayerRefrenceObject? newPlayer = m_playersController.getPlayer(newconnection);
             if (newPlayer == null)
                 throw new System.Exception("new player was not created!");
 
             PlayerRefrenceObject[] otherPlayers = m_playersController.getPlayers().Where(p => p._connectionId != newconnection).ToArray();
-            object[] data = new object[]
+            foreach (var player in otherPlayers)
+            {
+                object[] data = new object[]
                 {
                     (ushort)newPlayer.Value._connectionId,
                     (float)newPlayer.Value._gameObject.transform.position.x,
                     (float)newPlayer.Value._gameObject.transform.position.y,
                     (float)newPlayer.Value._gameObject.transform.position.z,
                 };
-            Message msg = new Message(MessageTypes.SpawnPlayer, data, MessagePriorities.high, true);
-            m_messagePublisher.PublishGlobalMessage(msg);
+                Message msg = new Message(MessageTypes.SpawnPlayer, data, MessagePriorities.high, true);
+                m_messagePublisher.PublishMessage(msg, player._connectionId);
+            }
         }
 
         private void sendHandShake(int newconnection)

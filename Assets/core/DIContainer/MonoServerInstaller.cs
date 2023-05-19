@@ -40,11 +40,11 @@ public class MonoServerInstaller : MonoInstaller
     {
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
         Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsTransient();
-        Container.Bind<ILoggerService>().To<LoggerService>().AsSingle();
-        Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsSingle().NonLazy();
+        Container.Bind<ILoggerService>().To<LoggerService>().AsTransient();
+        Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsTransient().NonLazy();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
         Container.Bind<IPlayersController>().To<PlayersController>().AsSingle().NonLazy();
-        Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
+        Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsTransient();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
         Container.Bind<ISpellInitializer>().To<SpellInitializer>().AsSingle();
         Container.Bind<IClickTypeCalculator>().To<ClickTypeCalculator>().AsTransient();

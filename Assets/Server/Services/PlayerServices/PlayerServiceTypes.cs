@@ -25,6 +25,7 @@ namespace Networking.Services
     {
         public void receiveInput(SInput[] inputs);
         public void addSpell(int key, PlayerSpell playerSpell);
+        public Spell[] getSpells();
     }
 
     public struct PlayerRefrenceObject

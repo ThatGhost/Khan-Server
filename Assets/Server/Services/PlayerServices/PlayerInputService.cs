@@ -1,14 +1,11 @@
 ﻿using System;
 using Zenject;
-using Networking.Behaviours;
-using System.Linq;
 using Khan_Shared.Simulation;
 
 namespace Networking.Services
 {
     public class PlayerInputService : IPlayerInputService
     {
-        [Inject] private readonly ILoggerService logger;
         [Inject] private readonly IPlayersController m_playersController;
 
         public void ReceivePlayerInput(SInput[] input, int connection)

@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Zenject;
 using Khan_Shared.Magic;
 using Khan_Shared.Networking;
+using System.Linq;
 
 using ConnectionId = System.Int32;
 
@@ -28,6 +26,21 @@ namespace Networking.Services
 
         public void InitializeSpells(ConnectionId connection)
         {
+            Spell spell = makeSpellForConnection(connection);
+
+            m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(0, new PlayerSpell()
+            {
+                spell = spell,
+                playerSpellId = m_currentPlayerSpellId,
+            });
+
+            sendConnectionSpellToConnection(connection, spell);
+            sendOtherSpellsToConnection(connection);
+            sendConnectionSpellToOthers(connection, spell);
+        }
+
+        private Spell makeSpellForConnection(ConnectionId connection)
+        {
             // TEMP -- until outside spell storage per player
             Spell spell = m_container.ResolveId<Spell>(spellId);
 
@@ -40,25 +53,59 @@ namespace Networking.Services
                 instanceOfSpell.ApplyModifiers(modifier);
             }
             instanceOfSpell.Initialize(connection, m_currentPlayerSpellId);
+            m_currentPlayerSpellId++;
+            return instanceOfSpell;
+            // -- TEMP
+        }
 
-            m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(0, new PlayerSpell()
-            {
-                spell = instanceOfSpell,
-                playerSpellId = m_currentPlayerSpellId,
-            });
-
+        private void sendConnectionSpellToConnection(ConnectionId connection, Spell spell)
+        {
             Message initializeSpellMessage = new Message(MessageTypes.InitializeSpell, new object[]
             {
                 (ushort)connection,
-                (ushort)m_currentPlayerSpellId,
-                (ushort)spellId,
-                (uint)modifierIds[0],
-                (uint)modifierIds[1],
-                (uint)modifierIds[2],
-            } ,MessagePriorities.high, true);
+                (ushort)spell.PlayerSpellId,
+                (ushort)spell.spellId,
+                (uint)spell.AppliedModifiers[0],
+                (uint)spell.AppliedModifiers[1],
+                (uint)spell.AppliedModifiers[2],
+            }, MessagePriorities.high, true);
+            m_messagePublisher.PublishMessage(initializeSpellMessage, connection);
+        }
+
+        private void sendOtherSpellsToConnection(ConnectionId connection)
+        {
+            PlayerRefrenceObject[] players = m_playerController.getPlayers();
+            foreach (var player in players.Where(p => p._connectionId != connection))
+            {
+                Spell[] spells = player._playerSpellController.getSpells();
+                foreach (var spell in spells)
+                {
+                    Message initializeSpellMessage = new Message(MessageTypes.InitializeSpell, new object[]
+                    {
+                        (ushort)player._connectionId,
+                        (ushort)spell.PlayerSpellId,
+                        (ushort)spell.spellId,
+                        (uint)spell.AppliedModifiers[0],
+                        (uint)spell.AppliedModifiers[1],
+                        (uint)spell.AppliedModifiers[2],
+                    }, MessagePriorities.high, true);
+                    m_messagePublisher.PublishMessage(initializeSpellMessage, connection);
+                }
+            }
+        }
+
+        private void sendConnectionSpellToOthers(ConnectionId connection, Spell spell)
+        {
+            Message initializeSpellMessage = new Message(MessageTypes.InitializeSpell, new object[]
+            {
+                (ushort)connection,
+                (ushort)spell.PlayerSpellId,
+                (ushort)spell.spellId,
+                (uint)spell.AppliedModifiers[0],
+                (uint)spell.AppliedModifiers[1],
+                (uint)spell.AppliedModifiers[2],
+            }, MessagePriorities.high, true);
             m_messagePublisher.PublishGlobalMessage(initializeSpellMessage);
-            m_currentPlayerSpellId++;
-            // -- TEMP
         }
     }
 }

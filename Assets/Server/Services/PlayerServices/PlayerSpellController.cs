@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using Khan_Shared.Magic;
 using Khan_Shared.Simulation;
-using Networking.Services;
-using UnityEngine;
+using System.Linq;
 using Key = System.Int32;
 
 namespace Networking.Services
@@ -11,6 +9,8 @@ namespace Networking.Services
     public class PlayerSpellController : IPlayerSpellController
     {
         private Dictionary<Key, PlayerSpell> m_playerSpells = new Dictionary<Key, PlayerSpell>();
+
+        public Spell[] getSpells() => m_playerSpells.Values.Select(p => p.spell).ToArray();
 
         public void receiveInput(SInput[] inputs)
         {
@@ -36,5 +36,6 @@ namespace Networking.Services
         {
             m_playerSpells.Add(key, playerSpell);
         }
+
     }
 }
