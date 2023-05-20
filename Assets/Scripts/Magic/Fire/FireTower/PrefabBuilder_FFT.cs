@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Khan_Shared.Magic;
+using Networking.Behaviours;
+using Zenject;
 
 namespace Server.Magic
 {
@@ -14,7 +16,9 @@ namespace Server.Magic
         {
             if (spell is not Spell_FireTower fireTower) return;
 
-            gameObject.transform.position = new Vector3(0, 0, fireTower.size);
+            // gameObject.transform.position = new Vector3(0, 0, fireTower.size);
         }
+
+        public class Factory : PlaceholderFactory<PrefabBuilder_FFT> { }
     }
 }

@@ -18,6 +18,10 @@ namespace Networking.Behaviours
         private int m_realSpeed;
 
         public Vector2 FaceRotation => new Vector2(m_bigRotX / SimulationConfiguration.g_MouseGranulairity, m_bigRotY / SimulationConfiguration.g_MouseGranulairity);
+        public Transform Face
+        {
+            get => m_face;
+        }
 
         private void OnValidate()
         {

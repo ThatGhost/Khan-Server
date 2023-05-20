@@ -22,20 +22,62 @@ namespace Server.Magic
         [Inject] private readonly IMonoHelper m_monoHelper;
         [Inject] private readonly IClickTypeCalculator m_clickTypeCalculator;
         [Inject] private readonly IMessagePublisher m_messagePublisher;
+        [Inject] private readonly PrefabBuilder_FFT.Factory m_prefabFactory;
 
-        public override void Trigger()
+        public override void Trigger(object[] metaData)
         {
             if (enabled && m_clickTypeCalculator.isDown(true))
             {
+                PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
+                Vector3 placePoint = getPlacePoint(player);
+                if (placePoint == Vector3.zero) return;
+
+                makeInstance(placePoint);
+                sendTrigger(placePoint);
+
                 enabled = false;
-
-                Instantiate(prefab);
-                Message triggerSpellMessage = new Message(MessageTypes.SpellTrigger, new object[] { (ushort)connectionId, (ushort)playerSpellId } ,MessagePriorities.medium);
-                m_messagePublisher.PublishGlobalMessage(triggerSpellMessage);
-
                 m_monoHelper.StartCoroutine(coolDown());
             }
             m_clickTypeCalculator.clicked(true);
+        }
+
+        private Vector3 getPlacePoint(PlayerRefrenceObject player)
+        {
+            Transform face = player._playerPositionBehaviour.Face;
+            int layerMask = 1 << 6; // spells can't interact with spells
+            layerMask = ~layerMask;
+
+            Vector3 position = Vector3.zero;
+            RaycastHit hit;
+            Debug.DrawRay(face.transform.position, face.transform.TransformDirection(Vector3.forward), Color.yellow, 5);
+            if (Physics.Raycast(face.transform.position, face.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+            {
+                return hit.point;
+            }
+            return Vector3.zero;
+        }
+
+        private void makeInstance(Vector3 position)
+        {
+            PrefabBuilder_FFT gameObject = m_prefabFactory.Create();
+            gameObject.transform.position = position;
+            gameObject.build(this);
+        }
+
+        private void sendTrigger(Vector3 position)
+        {
+            Message triggerSpellMessage = new Message(MessageTypes.AOETrigger
+            , new object[]
+            {
+                (ushort)connectionId,
+                (ushort)playerSpellId,
+                (float)position.x,
+                (float)position.y,
+                (float)position.z,
+            }
+            , MessagePriorities.medium);
+
+            m_messagePublisher.PublishGlobalMessage(triggerSpellMessage);
         }
 
         public override void Reset()

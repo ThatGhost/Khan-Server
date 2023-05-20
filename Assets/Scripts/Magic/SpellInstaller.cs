@@ -1,4 +1,5 @@
 using Khan_Shared.Magic;
+using Server.Magic;
 using System;
 using UnityEngine;
 using Zenject;
@@ -11,6 +12,9 @@ public class SpellInstaller : ScriptableObjectInstaller<SpellInstaller>
     public override void InstallBindings()
     {
         bindSpell(fire_FireTower);
+        Container.BindFactory<PrefabBuilder_FFT, PrefabBuilder_FFT.Factory>().FromComponentInNewPrefab(fire_FireTower.spell.prefab);
+
+
     }
 
 

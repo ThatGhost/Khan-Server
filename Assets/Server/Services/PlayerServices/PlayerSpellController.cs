@@ -12,7 +12,7 @@ namespace Networking.Services
 
         public Spell[] getSpells() => m_playerSpells.Values.Select(p => p.spell).ToArray();
 
-        public void receiveInput(SInput[] inputs)
+        public void receiveInput(PlayerRefrenceObject playerRefrence, SInput[] inputs)
         {
             bool trigger1 = false; 
             //bool trigger2 = false;
@@ -25,7 +25,7 @@ namespace Networking.Services
                 //trigger2 = (input.keys & 128) > 0; // 1000 0000
             }
 
-            if (trigger1) m_playerSpells[0].spell.Trigger();
+            if (trigger1) m_playerSpells[0].spell.Trigger(new object[] { playerRefrence });
             else m_playerSpells[0].spell.Reset();
 
             //if (trigger2) m_playerSpells[1].spell.Trigger();
