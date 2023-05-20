@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Khan_Shared.Simulation;
+using UnityEngine.Windows;
 
 namespace Networking.Behaviours
 {
@@ -17,6 +18,10 @@ namespace Networking.Behaviours
         private int m_realSpeed;
 
         public Vector2 FaceRotation => new Vector2(m_bigRotX / SimulationConfiguration.g_MouseGranulairity, m_bigRotY / SimulationConfiguration.g_MouseGranulairity);
+        public Transform Face
+        {
+            get => m_face;
+        }
 
         private void OnValidate()
         {
@@ -44,15 +49,26 @@ namespace Networking.Behaviours
             });
         }
 
-        public void updateInput(SInput[] inputs)
+        public void receiveInput(SInput[] inputs)
         {
+            PositionVector fullInputVector = new PositionVector();
+            short fullx = 0;
+            short fully = 0;
             foreach (var input in inputs)
             {
-                PositionVector addedPosition = PlayerMovement.calculatePosition((byte)input.keys, m_realSpeed, m_jumpHeight, true);
-                m_bigPosition += rotatePositionAlongYAxis(addedPosition, input.y);
-                m_bigRotX = input.x;
-                m_bigRotY = input.y;
+                fullInputVector += PlayerMovement.calculatePosition((ushort)input.keys, m_realSpeed, m_jumpHeight, true);
+                fullx = input.x;
+                fully = input.y;
             }
+            float lenghtOfInputVector = Mathf.Sqrt((float)(fullInputVector.x * fullInputVector.x + fullInputVector.z * fullInputVector.z));
+            PositionVector addedPosition = new PositionVector()
+            {
+                x = (int)(fullInputVector.x / lenghtOfInputVector * m_realSpeed),
+                z = (int)(fullInputVector.z / lenghtOfInputVector * m_realSpeed),
+            };
+            m_bigPosition += rotatePositionAlongYAxis(addedPosition, fully);
+            m_bigRotX = fullx;
+            m_bigRotY = fully;
         }
 
         private Vector3 positionVectorToVector3(PositionVector positionVector)

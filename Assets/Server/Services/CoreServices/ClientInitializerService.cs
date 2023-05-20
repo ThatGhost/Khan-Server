@@ -13,8 +13,9 @@ namespace Networking.Services
     {
         [Inject] private Transform g_root;
         [Inject] private readonly PlayerBehaviour.Factory m_playerFactory;
-        [Inject] private readonly PlayersController m_playersController;
+        [Inject] private readonly IPlayersController m_playersController;
         [Inject] private readonly IMessagePublisher m_messagePublisher;
+        [Inject] private readonly ISpellInitializer m_spellInitializer;
 
         public void Initialize()
         {
@@ -28,14 +29,25 @@ namespace Networking.Services
 
         private void onClientConnect(int connection)
         {
+            initializeMessageQueue(connection);
+
             PlayerBehaviour playerhook = m_playerFactory.Create();
             playerhook.gameObject.transform.SetParent(g_root);
             m_playersController.AddPlayer(playerhook, connection);
-            sendNewClientOtherClients(connection, playerhook.transform);
-            sendOtherClientsNewClient(connection, playerhook.transform);
+
+            sendHandShake(connection);
+            sendNewClientOtherClients(connection);
+            sendOtherClientsNewClient(connection);
+            m_spellInitializer.InitializeSpells(connection);
         }
 
-        private void sendNewClientOtherClients(int newconnection, Transform newClientTransform)
+        private void initializeMessageQueue(int newconnection)
+        {
+            Message msg = new Message(MessageTypes.Default);
+            m_messagePublisher.PublishMessage(msg, newconnection);
+        }
+
+        private void sendNewClientOtherClients(int newconnection)
         {
             PlayerRefrenceObject[] otherPlayers = m_playersController.getPlayers().Where(p => p._connectionId != newconnection).ToArray();
             foreach (var player in otherPlayers)
@@ -52,7 +64,7 @@ namespace Networking.Services
             }
         }
 
-        private void sendOtherClientsNewClient(int newconnection, Transform newClientTransform)
+        private void sendOtherClientsNewClient(int newconnection)
         {
             PlayerRefrenceObject? newPlayer = m_playersController.getPlayer(newconnection);
             if (newPlayer == null)
@@ -71,6 +83,12 @@ namespace Networking.Services
                 Message msg = new Message(MessageTypes.SpawnPlayer, data, MessagePriorities.high, true);
                 m_messagePublisher.PublishMessage(msg, player._connectionId);
             }
+        }
+
+        private void sendHandShake(int newconnection)
+        {
+            Message handshakeMessage = new Message(MessageTypes.HandShake, new object[] {(ushort)newconnection}, MessagePriorities.high, true);
+            m_messagePublisher.PublishMessage(handshakeMessage, newconnection);
         }
     }
 }

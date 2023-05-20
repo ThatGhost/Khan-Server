@@ -5,11 +5,16 @@ using Networking.EntryPoints;
 
 using UnityEngine;
 using Zenject;
+using Server.Magic;
 
 public class MonoServerInstaller : MonoInstaller
 {
-    public GameObject playerPrefab;
+    // root
     public Transform g_root;
+
+    // prefabs
+    [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject spell_Fire_FlameTower;
 
     public override void InstallBindings()
     {
@@ -34,20 +39,20 @@ public class MonoServerInstaller : MonoInstaller
     private void registerServices()
     {
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
-        Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsSingle();
-        Container.Bind<Networking.Services.ILogger>().To<Networking.Services.Logger>().AsSingle();
-
-        Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsSingle().NonLazy();
+        Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsTransient();
+        Container.Bind<ILoggerService>().To<LoggerService>().AsTransient();
+        Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsTransient().NonLazy();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
-
-        Container.Bind<PlayersController>().AsSingle().NonLazy();
-        Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsSingle();
+        Container.Bind<IPlayersController>().To<PlayersController>().AsSingle().NonLazy();
+        Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsTransient();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
+        Container.Bind<ISpellInitializer>().To<SpellInitializer>().AsSingle();
+        Container.Bind<IClickTypeCalculator>().To<ClickTypeCalculator>().AsTransient();
     }
 
     private void registerBehaviours()
     {
-        //Container.Bind<ITestBehaviour>().To<TestBehaviour>().FromComponentOn(server).AsSingle();
+        Container.Bind<TestBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
     }
 
     private void registerFactories()
@@ -59,6 +64,7 @@ public class MonoServerInstaller : MonoInstaller
 /*
  * Bind<> for basic binding
  * BindExicutionOrder<> for order dependent
+ * Con
  * BindInterfaces...<> for multiple interfaces to 1 obj
  * 
  * To<> for basic binding
@@ -69,6 +75,6 @@ public class MonoServerInstaller : MonoInstaller
  * 
  * AsSingle() for basic 1-1 binding
  * AsTransient() new obj every inject
- * AsCached() for chaches
+ * AsCached() for singleton for the same contract type
  * https://github.com/modesttree/Zenject/blob/master/Documentation/CheatSheet.md
  */

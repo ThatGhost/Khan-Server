@@ -11,7 +11,7 @@ namespace Networking.Services
     public class PlayerPositionService: IInitializable, ILateDisposable
     {
         [Inject] private readonly IMessagePublisher m_messagePublisher;
-        [Inject] private readonly PlayersController m_playersController;
+        [Inject] private readonly IPlayersController m_playersController;
 
         public void Initialize()
         {

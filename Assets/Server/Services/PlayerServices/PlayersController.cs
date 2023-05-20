@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using Networking.Behaviours;
 using UnityEngine;
 using System.Linq;
+using Zenject;
+using Khan_Shared.Magic;
 
 using ConnectionId = System.Int32;
 
 namespace Networking.Services
 {
-    public class PlayersController
+    public class PlayersController: IPlayersController
     {
         private Dictionary<ConnectionId, PlayerRefrenceObject> m_playerRefrences = new Dictionary<ConnectionId, PlayerRefrenceObject>();
 
@@ -22,6 +24,7 @@ namespace Networking.Services
                 playerRefrenceObject._gameObject = playerBehaviour.gameObject;
                 playerRefrenceObject._playerBehaviour = playerBehaviour;
                 playerRefrenceObject._playerPositionBehaviour = playerRefrenceObject._gameObject.GetComponent<PlayerPositionBehaviour>();
+                playerRefrenceObject._playerSpellController = playerBehaviour.m_playerSpellController;
                 m_playerRefrences.Add(connection, playerRefrenceObject);
             }
         }
@@ -31,6 +34,15 @@ namespace Networking.Services
             if(m_playerRefrences.ContainsKey(connection))
             {
                 return m_playerRefrences[connection];
+            }
+            return null;
+        }
+
+        public PlayerRefrenceObject? getPlayer(GameObject gameObject)
+        {
+            foreach (var player in m_playerRefrences)
+            {
+                if (player.Value._gameObject == gameObject) return player.Value;
             }
             return null;
         }

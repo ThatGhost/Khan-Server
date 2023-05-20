@@ -1,12 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
-using Networking.Services;
 using UnityEngine;
 
-public class MonoHelpers : MonoBehaviour, IMonoHelper
+namespace Networking.Services
 {
-    public void StartCourotine(IEnumerator enumerator)
+    public class MonoHelpers : MonoBehaviour, IMonoHelper
     {
-        StartCoroutine(enumerator);
+        public new void StartCoroutine(IEnumerator enumerator)
+        {
+            base.StartCoroutine(enumerator);
+        }
+
+        public new Object Instantiate(Object o)
+        {
+            return MonoBehaviour.Instantiate(o);
+        }
     }
 }
