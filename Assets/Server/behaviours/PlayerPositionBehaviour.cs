@@ -12,8 +12,8 @@ namespace Networking.Behaviours
         [SerializeField] private Transform m_face;
 
         private PositionVector m_bigPosition;
-        private short m_bigRotX;
-        private short m_bigRotY;
+        private float m_bigRotX;
+        private float m_bigRotY;
 
         private int m_realSpeed;
 
@@ -52,8 +52,8 @@ namespace Networking.Behaviours
         public void receiveInput(SInput[] inputs)
         {
             PositionVector fullInputVector = new PositionVector();
-            short fullx = 0;
-            short fully = 0;
+            float fullx = 0;
+            float fully = 0;
             foreach (var input in inputs)
             {
                 fullInputVector += PlayerMovement.calculatePosition((ushort)input.keys, m_realSpeed, m_jumpHeight, true);
@@ -81,9 +81,9 @@ namespace Networking.Behaviours
             };
         }
 
-        private PositionVector rotatePositionAlongYAxis(PositionVector position, short y)
+        private PositionVector rotatePositionAlongYAxis(PositionVector position, float y)
         {
-            float realY = y / (float)SimulationConfiguration.g_MouseGranulairity;
+            float realY = y;
             realY *= Mathf.Deg2Rad;
 
             float cos = Mathf.Cos(realY);

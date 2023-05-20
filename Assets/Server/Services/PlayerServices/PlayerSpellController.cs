@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Khan_Shared.Magic;
 using Khan_Shared.Simulation;
 using System.Linq;
+using UnityEngine;
 using Key = System.Int32;
 
 namespace Networking.Services
@@ -14,15 +15,17 @@ namespace Networking.Services
 
         public void receiveInput(PlayerRefrenceObject playerRefrence, SInput[] inputs)
         {
-            bool trigger1 = false; 
+            bool trigger1 = false;
             //bool trigger2 = false;
+            //bool trigger4 = false;
+            //bool trigger5 = false;
 
             foreach (var input in inputs)   
             {
-                trigger1 = (input.keys & 16) > 0;  // 0001 0000
-                //trigger2 = (input.keys & 32) > 0;  // 0010 0000
-                //trigger2 = (input.keys & 64) > 0;  // 0100 0000
-                //trigger2 = (input.keys & 128) > 0; // 1000 0000
+                if(!trigger1) trigger1 = (input.keys & 256) > 0;  // 0000 0001 0000 0000
+                //if(!trigger2) trigger2 = (input.keys & 512) > 0;  // 0000 0010 0000 0000
+                //if(!trigger3) trigger3 = (input.keys & 1024) > 0; // 0000 0100 0000 0000
+                //if(!trigger4) trigger4 = (input.keys & 2048) > 0; // 0000 1000 0000 0000
             }
 
             if (trigger1) m_playerSpells[0].spell.Trigger(new object[] { playerRefrence });
