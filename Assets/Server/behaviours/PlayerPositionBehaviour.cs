@@ -1,101 +1,118 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Khan_Shared.Simulation;
+using Khan_Shared.Utils;
 using UnityEngine.Windows;
+using Zenject;
 
 namespace Networking.Behaviours
 {
     public class PlayerPositionBehaviour : MonoBehaviour, IPlayerPositionBehaviour
     {
-        [SerializeField] private int m_speed;
-        [SerializeField] private int m_jumpHeight;
-        [SerializeField] private Transform m_face;
+        [SerializeField] private Transform face;
+        [SerializeField] private Transform feet;
 
-        private PositionVector m_bigPosition;
-        private float m_bigRotX;
-        private float m_bigRotY;
+        public float moveSpeed = 5f;
+        public float jumpForce = 5f;
+        public float gravity = 9.81f;
+        public float maxVelocity = 100f;
 
-        private int m_realSpeed;
+        private Rigidbody m_rigidbody;
+        private Quaternion m_targetRotation;
+        private Quaternion m_cameraTargetRotation;
 
-        public Vector2 FaceRotation => new Vector2(m_bigRotX / SimulationConfiguration.g_MouseGranulairity, m_bigRotY / SimulationConfiguration.g_MouseGranulairity);
+        private bool moveUp;
+        private bool moveDown;
+        private bool moveLeft;
+        private bool moveRight;
+        private bool jump;
+        private float moveX;
+        private float moveY;
+
+        public Vector2 FaceRotation => new Vector2(face.transform.rotation.eulerAngles.x, face.transform.rotation.eulerAngles.y);
         public Transform Face
         {
-            get => m_face;
-        }
-
-        private void OnValidate()
-        {
-            m_realSpeed = (int)(m_speed * Time.fixedDeltaTime);
+            get => face;
         }
 
         private void Start()
         {
-            m_realSpeed = (int)(m_speed * Time.fixedDeltaTime);
-            m_bigPosition = new PositionVector()
-            {
-                x = (int)(gameObject.transform.position.x * SimulationConfiguration.g_InputGranulairity),
-                y = (int)(gameObject.transform.position.y * SimulationConfiguration.g_InputGranulairity),
-                z = (int)(gameObject.transform.position.z * SimulationConfiguration.g_InputGranulairity),
-            };
+            m_rigidbody = GetComponent<Rigidbody>();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            m_targetRotation = transform.rotation;
+            m_cameraTargetRotation = Camera.main.transform.localRotation;
         }
 
-        private void Update()
+        public void updateInput(SInput[] inputs)
         {
-            gameObject.transform.position = positionVectorToVector3(m_bigPosition);
-            m_face.rotation = Quaternion.Euler(new Vector3()
-            {
-                x = (float)(m_bigRotX / SimulationConfiguration.g_MouseGranulairity),
-                y = (float)(m_bigRotY / SimulationConfiguration.g_MouseGranulairity),
-            });
-        }
+            // Reset movement and rotation variables
+            moveUp = false;
+            moveDown = false;
+            moveLeft = false;
+            moveRight = false;
+            jump = false;
+            moveX = 0;
+            moveY = 0;
 
-        public void receiveInput(SInput[] inputs)
-        {
-            PositionVector fullInputVector = new PositionVector();
-            float fullx = 0;
-            float fully = 0;
-            foreach (var input in inputs)
+            // Process each input in the array
+            for (int i = 0; i < inputs.Length; i++)
             {
-                fullInputVector += PlayerMovement.calculatePosition((ushort)input.keys, m_realSpeed, m_jumpHeight, true);
-                fullx = input.x;
-                fully = input.y;
+                SInput input = inputs[i];
+                moveLeft |= (input.keys & 1) > 0;
+                moveRight |= (input.keys & 2) > 0;
+                moveUp |= (input.keys & 4) > 0;
+                moveDown |= (input.keys & 8) > 0;
+                jump |= (input.keys & 16) > 0;
+                moveX = input.x;
+                moveY = input.y;
             }
-            float lenghtOfInputVector = Mathf.Sqrt((float)(fullInputVector.x * fullInputVector.x + fullInputVector.z * fullInputVector.z));
-            PositionVector addedPosition = new PositionVector()
-            {
-                x = (int)(fullInputVector.x / lenghtOfInputVector * m_realSpeed),
-                z = (int)(fullInputVector.z / lenghtOfInputVector * m_realSpeed),
-            };
-            m_bigPosition += rotatePositionAlongYAxis(addedPosition, fully);
-            m_bigRotX = fullx;
-            m_bigRotY = fully;
         }
 
-        private Vector3 positionVectorToVector3(PositionVector positionVector)
+        private void FixedUpdate()
         {
-            return new Vector3()
+            // Rotation
+            face.transform.localRotation = Quaternion.Euler(moveX, moveY, 0f);
+
+            // Jump
+            if (jump && IsGrounded())
             {
-                x = positionVector.x / (float)SimulationConfiguration.g_InputGranulairity,
-                y = positionVector.y / (float)SimulationConfiguration.g_InputGranulairity,
-                z = positionVector.z / (float)SimulationConfiguration.g_InputGranulairity,
-            };
+                m_rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            }
+
+            // Movement
+            Vector3 moveDirection = CalculateMoveDirection();
+            m_rigidbody.AddForce(moveDirection * moveSpeed);
+
+            // Clamp velocity
+            m_rigidbody.velocity = Vector3.ClampMagnitude(m_rigidbody.velocity, maxVelocity);
+
+            // Gravity
+            m_rigidbody.AddForce(Vector3.down * gravity);
         }
 
-        private PositionVector rotatePositionAlongYAxis(PositionVector position, float y)
+        private Vector3 CalculateMoveDirection()
         {
-            float realY = y;
-            realY *= Mathf.Deg2Rad;
+            Vector3 moveDirection = Vector3.zero;
 
-            float cos = Mathf.Cos(realY);
-            float sin = Mathf.Sin(realY);
+            if (moveUp && !moveDown)
+                moveDirection += face.forward;
+            else if (moveDown && !moveUp)
+                moveDirection -= face.forward;
 
-            PositionVector newVector = new PositionVector()
-            {
-                z = (int)(position.z * cos - position.x * sin),
-                y = 0,
-                x = (int)(position.z * sin + position.x * cos),
-            };
-            return newVector;
+            if (moveLeft && !moveRight)
+                moveDirection -= face.right;
+            else if (moveRight && !moveLeft)
+                moveDirection += face.right;
+
+            moveDirection.Normalize();
+            moveDirection.y = 0;
+            return moveDirection;
+        }
+
+        private bool IsGrounded()
+        {
+            float groundCheckDistance = 0.2f;
+            return Physics.Raycast(feet.position, Vector3.down, groundCheckDistance);
         }
     }
 }

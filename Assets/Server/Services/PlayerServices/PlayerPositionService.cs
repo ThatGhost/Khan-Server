@@ -5,6 +5,7 @@ using Zenject;
 using Networking.Core;
 using System.Linq;
 using Khan_Shared.Networking;
+using System;
 
 namespace Networking.Services
 {
@@ -12,10 +13,14 @@ namespace Networking.Services
     {
         [Inject] private readonly IMessagePublisher m_messagePublisher;
         [Inject] private readonly IPlayersController m_playersController;
+        [Inject] private readonly IMonoHelper m_monoHelper;
+
+        private readonly float timeBetweenReconciliation = 0.5f;
 
         public void Initialize()
         {
             GameServer.onServerTick += onTick;
+            m_monoHelper.StartCoroutine(serverReconciliation());
         }
 
         public void LateDispose()
@@ -44,6 +49,34 @@ namespace Networking.Services
                     Message msg = new Message(MessageTypes.PositionData, data, MessagePriorities.medium);
                     m_messagePublisher.PublishMessage(msg, player._connectionId);
                 }
+            }
+        }
+
+        private IEnumerator serverReconciliation()
+        {
+            yield return new WaitForSecondsRealtime(timeBetweenReconciliation);
+            sendServerReconciliation();
+            m_monoHelper.StartCoroutine(serverReconciliation());
+        }
+
+        private void sendServerReconciliation()
+        {
+            PlayerRefrenceObject[] players = m_playersController.getPlayers();
+
+            foreach (var player in players)
+            {
+                Vector3 playerPosition = player._gameObject.transform.position;
+                DateTime now = DateTime.UtcNow;
+
+                object[] data = new object[]
+                {
+                    (float)playerPosition.x,
+                    (float)playerPosition.y,
+                    (float)playerPosition.z,
+                    (DateTime)now,
+                };
+                Message msg = new Message(MessageTypes.ServerReconciliation, data, MessagePriorities.high);
+                m_messagePublisher.PublishMessage(msg, player._connectionId);
             }
         }
     }
