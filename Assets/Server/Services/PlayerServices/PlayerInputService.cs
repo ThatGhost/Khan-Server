@@ -1,6 +1,6 @@
 ﻿using System;
 using Zenject;
-using Khan_Shared.Simulation;
+using Khan_Shared.Utils;
 
 namespace Networking.Services
 {
@@ -14,7 +14,7 @@ namespace Networking.Services
             if (playerRefrenceObject == null)
                 throw new Exception("err.services.player.notfoud");
             
-            playerRefrenceObject.Value._playerPositionBehaviour.receiveInput(input);
+            playerRefrenceObject.Value._playerPositionBehaviour.updateInput(input);
             playerRefrenceObject.Value._playerSpellController.receiveInput(playerRefrenceObject.Value, input);
         }
     }

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Khan_Shared.Networking;
-using Khan_Shared.Simulation;
+using Khan_Shared.Utils;
 using Zenject;
 using Networking.Services;
 
@@ -25,11 +25,11 @@ namespace Networking.EntryPoints
         {
             byte[] usableData = ((byte[])data[0]).Skip(2).ToArray();
             List<SInput> inputs = new List<SInput>();
-            for (int i = 0; i < usableData.Length; i += 6)
+            for (int i = 0; i < usableData.Length; i += 10)
             {
                 ushort keys = BitConverter.ToUInt16(new byte[2] { usableData[i + 0], usableData[i + 1] });
-                short x = BitConverter.ToInt16(new byte[2] { usableData[i + 2], usableData[i + 3] });
-                short y = BitConverter.ToInt16(new byte[2] { usableData[i + 4], usableData[i + 5] });
+                float x = BitConverter.ToSingle(new byte[4] { usableData[i + 2], usableData[i + 3], usableData[i + 4], usableData[i + 5] });
+                float y = BitConverter.ToSingle(new byte[4] { usableData[i + 6], usableData[i + 7], usableData[i + 8], usableData[i + 9] });
 
                 inputs.Add(new SInput()
                 {

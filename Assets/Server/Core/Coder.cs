@@ -51,6 +51,23 @@ namespace Networking.Core
                 case DataType.Byte:
                     msg.AddData(stream.ReadByte());
                     break;
+                case DataType.Double:
+                    List<byte> doubleBytes = new List<byte>();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        doubleBytes.Add(stream.ReadByte());
+                    }
+                    msg.AddData(BitConverter.ToDouble(doubleBytes.ToArray()));
+                    break;
+                case DataType.DateTime:
+                    List<byte> timeBytes = new List<byte>();
+                    for (int i = 0; i < 8; i++)
+                    {
+                        timeBytes.Add(stream.ReadByte());
+                    }
+                    DateTime time = DateTime.FromOADate(BitConverter.ToDouble(timeBytes.ToArray()));
+                    msg.AddData(time);
+                    break;
                 case DataType.Varied:
                     ushort size = stream.ReadUShort();
                     List<byte> bytes = new List<byte>();
@@ -98,6 +115,19 @@ namespace Networking.Core
                     break;
                 case DataType.Byte:
                     writer.WriteByte((byte)obj);
+                    break;
+                case DataType.Double:
+                    byte[] doubleBytes = BitConverter.GetBytes((double)obj);
+                    NativeArray<byte> doubleArray = new NativeArray<Byte>(doubleBytes, Allocator.Temp);
+                    writer.WriteBytes(doubleArray);
+                    doubleArray.Dispose();
+                    break;
+                case DataType.DateTime:
+                    DateTime dateTime = (DateTime)obj;
+                    byte[] OATime = BitConverter.GetBytes(dateTime.ToOADate());
+                    NativeArray<byte> dateTimeArray = new NativeArray<Byte>(OATime, Allocator.Temp);
+                    writer.WriteBytes(dateTimeArray);
+                    dateTimeArray.Dispose();
                     break;
                 case DataType.Varied:
                     byte[] bytes = (byte[])obj;

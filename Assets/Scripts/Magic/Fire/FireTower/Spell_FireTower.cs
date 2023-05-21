@@ -49,7 +49,6 @@ namespace Server.Magic
 
             Vector3 position = Vector3.zero;
             RaycastHit hit;
-            Debug.DrawRay(face.transform.position, face.transform.TransformDirection(Vector3.forward), Color.yellow, 5);
             if (Physics.Raycast(face.transform.position, face.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
             {
                 return hit.point;
