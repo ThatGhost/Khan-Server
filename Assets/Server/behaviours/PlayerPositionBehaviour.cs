@@ -15,6 +15,7 @@ namespace Networking.Behaviours
         public float jumpForce = 5f;
         public float gravity = 9.81f;
         public float maxVelocity = 100f;
+        public float friction = 1f;
 
         private Rigidbody m_rigidbody;
         private Quaternion m_targetRotation;
@@ -28,6 +29,9 @@ namespace Networking.Behaviours
         private float moveX;
         private float moveY;
 
+        private bool isGrounded = true;
+        private Vector3 m_velocity;
+
         public Vector2 FaceRotation => new Vector2(face.transform.rotation.eulerAngles.x, face.transform.rotation.eulerAngles.y);
         public Transform Face
         {
@@ -37,35 +41,19 @@ namespace Networking.Behaviours
         private void Start()
         {
             m_rigidbody = GetComponent<Rigidbody>();
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
             m_targetRotation = transform.rotation;
             m_cameraTargetRotation = Camera.main.transform.localRotation;
         }
 
-        public void updateInput(SInput[] inputs)
+        public void updateInput(SInput input)
         {
-            // Reset movement and rotation variables
-            moveUp = false;
-            moveDown = false;
-            moveLeft = false;
-            moveRight = false;
-            jump = false;
-            moveX = 0;
-            moveY = 0;
-
-            // Process each input in the array
-            for (int i = 0; i < inputs.Length; i++)
-            {
-                SInput input = inputs[i];
-                moveLeft |= (input.keys & 1) > 0;
-                moveRight |= (input.keys & 2) > 0;
-                moveUp |= (input.keys & 4) > 0;
-                moveDown |= (input.keys & 8) > 0;
-                jump |= (input.keys & 16) > 0;
-                moveX = input.x;
-                moveY = input.y;
-            }
+            moveLeft = (input.keys & 1) > 0;
+            moveRight = (input.keys & 2) > 0;
+            moveUp = (input.keys & 4) > 0;
+            moveDown = (input.keys & 8) > 0;
+            jump = (input.keys & 16) > 0;
+            moveX = input.x;
+            moveY = input.y;
         }
 
         private void FixedUpdate()
@@ -73,21 +61,23 @@ namespace Networking.Behaviours
             // Rotation
             face.transform.localRotation = Quaternion.Euler(moveX, moveY, 0f);
 
-            // Jump
-            if (jump && IsGrounded())
+            if (IsGrounded())
             {
-                m_rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                if (!isGrounded) m_velocity.y = 0;
+                isGrounded = true;
+                if (jump) AddForce(Vector3.up * jumpForce);
+            }
+            else
+            {
+                isGrounded = false;
+                AddForce(Vector3.down * gravity);
             }
 
             // Movement
             Vector3 moveDirection = CalculateMoveDirection();
-            m_rigidbody.AddForce(moveDirection * moveSpeed);
+            AddForce(moveDirection * moveSpeed);
 
-            // Clamp velocity
-            m_rigidbody.velocity = Vector3.ClampMagnitude(m_rigidbody.velocity, maxVelocity);
-
-            // Gravity
-            m_rigidbody.AddForce(Vector3.down * gravity);
+            ApplyForce();
         }
 
         private Vector3 CalculateMoveDirection()
@@ -113,6 +103,20 @@ namespace Networking.Behaviours
         {
             float groundCheckDistance = 0.2f;
             return Physics.Raycast(feet.position, Vector3.down, groundCheckDistance);
+        }
+
+        private void ApplyForce()
+        {
+            m_rigidbody.velocity = m_velocity;
+            m_velocity = Vector3.Lerp(m_velocity, Vector3.zero, Time.fixedDeltaTime * friction);
+        }
+
+        private void AddForce(Vector3 force)
+        {
+            m_velocity += force;
+            float yvel = m_velocity.y;
+            m_velocity = Vector3.ClampMagnitude(m_velocity, maxVelocity);
+            m_velocity.y = yvel;
         }
     }
 }

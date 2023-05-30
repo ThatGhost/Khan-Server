@@ -8,7 +8,7 @@ namespace Networking.Services
     {
         [Inject] private readonly IPlayersController m_playersController;
 
-        public void ReceivePlayerInput(SInput[] input, int connection)
+        public void ReceivePlayerInput(SInput input, int connection)
         {
             Nullable<PlayerRefrenceObject> playerRefrenceObject = m_playersController.getPlayer(connection);
             if (playerRefrenceObject == null)
