@@ -169,7 +169,7 @@ namespace Networking.Core
                         int code = m_networkDriver.BeginSend(m_relaiblePipeline, m_connections[i], out var writer);
 
                         if (code == 0) m_messageQueue.DequeuRelaibleMessages(ref writer, m_connections[i].InternalId);
-                        else throw new System.Exception($"Cant send data to server, writer exited with code {code}");
+                        else throw new System.Exception($"Cant send data to client, writer exited with code {code}");
 
                         m_networkDriver.EndSend(writer);
                     }
