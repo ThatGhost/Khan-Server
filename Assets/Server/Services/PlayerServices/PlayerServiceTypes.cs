@@ -10,7 +10,7 @@ namespace Networking.Services
 {
     public interface IPlayerInputService
     {
-        public void ReceivePlayerInput(SInput[] input, int connection);
+        public void ReceivePlayerInput(SInput input, int connection);
     }
 
     public interface IPlayersController
@@ -23,7 +23,7 @@ namespace Networking.Services
 
     public interface IPlayerSpellController
     {
-        public void receiveInput(PlayerRefrenceObject connection, SInput[] inputs);
+        public void receiveInput(PlayerRefrenceObject connection, SInput inputs);
         public void addSpell(int key, PlayerSpell playerSpell);
         public Spell[] getSpells();
     }

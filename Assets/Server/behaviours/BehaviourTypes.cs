@@ -11,7 +11,7 @@ namespace Networking.Behaviours
 
     public interface IPlayerPositionBehaviour
     {
-        public void updateInput(SInput[] inputs);
+        public void updateInput(SInput input);
         public Vector2 FaceRotation { get; }
     }
 
