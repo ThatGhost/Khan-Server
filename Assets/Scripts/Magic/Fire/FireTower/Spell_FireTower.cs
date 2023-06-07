@@ -12,9 +12,6 @@ namespace Server.Magic
     public class Spell_FireTower : Spell
     {
         public float size = 1;
-        public Color color = Color.black;
-        public float animationSpeed = 1;
-        public float coolDownTime = 1;
 
         public bool enabled = true;
 
@@ -28,14 +25,11 @@ namespace Server.Magic
         {
             if (enabled && m_clickTypeCalculator.isDown(true))
             {
-                PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
-                Vector3 placePoint = getPlacePoint(player);
-                if (placePoint == Vector3.zero) return;
-
-                makeInstance(placePoint);
-                sendTrigger(placePoint);
-
                 enabled = false;
+
+                sendPreTrigger();
+
+                m_monoHelper.StartCoroutine(WhaitToTrigger(metaData));
                 m_monoHelper.StartCoroutine(coolDown());
             }
             m_clickTypeCalculator.clicked(true);
@@ -79,6 +73,18 @@ namespace Server.Magic
             m_messagePublisher.PublishGlobalMessage(triggerSpellMessage);
         }
 
+        private void sendPreTrigger()
+        {
+            Message preTriggerSpellMessage = new Message(MessageTypes.PreSpellTrigger
+            , new object[]
+            {
+                (ushort)connectionId,
+                (ushort)playerSpellId,
+            }
+            , MessagePriorities.medium);
+            m_messagePublisher.PublishGlobalMessage(preTriggerSpellMessage);
+        }
+
         public override void Reset()
         {
             m_clickTypeCalculator.clicked(false);
@@ -86,8 +92,21 @@ namespace Server.Magic
 
         private IEnumerator coolDown()
         {
-            yield return new WaitForSecondsRealtime(coolDownTime);
+            yield return new WaitForSeconds(cooldown + (timeToActivation / 60));
             enabled = true;
+        }
+
+        private IEnumerator WhaitToTrigger(object[] metaData)
+        {
+            yield return new WaitForSeconds(timeToActivation / 60);
+
+            PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
+            Vector3 placePoint = getPlacePoint(player);
+            if (placePoint != Vector3.zero)
+            {
+                makeInstance(placePoint);
+                sendTrigger(placePoint);
+            }
         }
     }
 }

@@ -15,8 +15,15 @@ namespace Server.Magic
         public override void build(Spell spell)
         {
             if (spell is not Spell_FireTower fireTower) return;
+            StartCoroutine(die(12));
 
             // gameObject.transform.position = new Vector3(0, 0, fireTower.size);
+        }
+
+        private IEnumerator die(float deathTime)
+        {
+            yield return new WaitForSeconds(deathTime);
+            Destroy(gameObject);
         }
 
         public class Factory : PlaceholderFactory<PrefabBuilder_FFT> { }

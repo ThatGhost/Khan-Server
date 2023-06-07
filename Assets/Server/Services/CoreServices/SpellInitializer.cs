@@ -26,9 +26,9 @@ namespace Networking.Services
 
         public void InitializeSpells(ConnectionId connection)
         {
-            Spell spell = makeSpellForConnection(connection);
+            Spell spell = makeSpellForConnection(connection, 0);
 
-            m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(0, new PlayerSpell()
+            m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(spell.Key, new PlayerSpell()
             {
                 spell = spell,
                 playerSpellId = m_currentPlayerSpellId,
@@ -39,7 +39,7 @@ namespace Networking.Services
             sendConnectionSpellToOthers(connection, spell);
         }
 
-        private Spell makeSpellForConnection(ConnectionId connection)
+        private Spell makeSpellForConnection(ConnectionId connection, int key)
         {
             // TEMP -- until outside spell storage per player
             Spell spell = m_container.ResolveId<Spell>(spellId);
@@ -52,7 +52,7 @@ namespace Networking.Services
                 SpellModifier modifier = m_container.ResolveId<SpellModifier>(modifierId);
                 instanceOfSpell.ApplyModifiers(modifier);
             }
-            instanceOfSpell.Initialize(connection, m_currentPlayerSpellId);
+            instanceOfSpell.Initialize(connection, m_currentPlayerSpellId, key);
             m_currentPlayerSpellId++;
             return instanceOfSpell;
             // -- TEMP
@@ -68,6 +68,7 @@ namespace Networking.Services
                 (uint)spell.AppliedModifiers[0],
                 (uint)spell.AppliedModifiers[1],
                 (uint)spell.AppliedModifiers[2],
+                (byte)spell.Key,
             }, MessagePriorities.high, true);
             m_messagePublisher.PublishMessage(initializeSpellMessage, connection);
         }
@@ -88,6 +89,7 @@ namespace Networking.Services
                         (uint)spell.AppliedModifiers[0],
                         (uint)spell.AppliedModifiers[1],
                         (uint)spell.AppliedModifiers[2],
+                        (byte)spell.Key,
                     }, MessagePriorities.high, true);
                     m_messagePublisher.PublishMessage(initializeSpellMessage, connection);
                 }
@@ -104,6 +106,7 @@ namespace Networking.Services
                 (uint)spell.AppliedModifiers[0],
                 (uint)spell.AppliedModifiers[1],
                 (uint)spell.AppliedModifiers[2],
+                (byte)spell.Key
             }, MessagePriorities.high, true);
             m_messagePublisher.PublishGlobalMessage(initializeSpellMessage);
         }
