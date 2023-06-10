@@ -42,7 +42,6 @@ namespace Networking.Behaviours
         {
             m_rigidbody = GetComponent<Rigidbody>();
             m_targetRotation = transform.rotation;
-            m_cameraTargetRotation = Camera.main.transform.localRotation;
         }
 
         public void updateInput(SInput input)

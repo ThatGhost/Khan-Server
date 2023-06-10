@@ -15,79 +15,36 @@ namespace Server.Magic
 
         public bool enabled = true;
 
-        [Inject] private readonly ILoggerService m_loggerService;
         [Inject] private readonly IMonoHelper m_monoHelper;
-        [Inject] private readonly IClickTypeCalculator m_clickTypeCalculator;
-        [Inject] private readonly IMessagePublisher m_messagePublisher;
-        [Inject] private readonly PrefabBuilder_FFT.Factory m_prefabFactory;
+        [Inject] private readonly ISpellPoolUtillity m_spellPoolUtillity;
+        [Inject] private readonly ISpellNetworkingUtillity m_spellNetworkingUtillity;
+        [Inject] private readonly ISpellPlayerUtillity m_spellPlayerUtillity;
+
+        public override void Initialize(int connectionId, int playerSpellId, int key)
+        {
+            base.Initialize(connectionId, playerSpellId, key);
+            m_spellPoolUtillity.setup(this.prefab);
+        }
 
         public override void Trigger(object[] metaData)
         {
-            if (enabled && m_clickTypeCalculator.isDown(true))
+            if (enabled)
             {
                 enabled = false;
 
-                sendPreTrigger();
+                m_spellNetworkingUtillity.sendPreTrigger(playerSpellId, connectionId);
 
                 m_monoHelper.StartCoroutine(WhaitToTrigger(metaData));
                 m_monoHelper.StartCoroutine(coolDown());
             }
-            m_clickTypeCalculator.clicked(true);
-        }
-
-        private Vector3 getPlacePoint(PlayerRefrenceObject player)
-        {
-            Transform face = player._playerPositionBehaviour.Face;
-            int layerMask = 1 << 6; // spells can't interact with spells
-            layerMask = ~layerMask;
-
-            Vector3 position = Vector3.zero;
-            RaycastHit hit;
-            if (Physics.Raycast(face.transform.position, face.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
-            {
-                return hit.point;
-            }
-            return Vector3.zero;
         }
 
         private void makeInstance(Vector3 position)
         {
-            PrefabBuilder_FFT gameObject = m_prefabFactory.Create();
+            PrefabBuilder_FFT gameObject = m_spellPoolUtillity.request<PrefabBuilder_FFT>(this);
             gameObject.transform.position = position;
-            gameObject.build(this);
-        }
 
-        private void sendTrigger(Vector3 position)
-        {
-            Message triggerSpellMessage = new Message(MessageTypes.AOETrigger
-            , new object[]
-            {
-                (ushort)connectionId,
-                (ushort)playerSpellId,
-                (float)position.x,
-                (float)position.y,
-                (float)position.z,
-            }
-            , MessagePriorities.medium);
-
-            m_messagePublisher.PublishGlobalMessage(triggerSpellMessage);
-        }
-
-        private void sendPreTrigger()
-        {
-            Message preTriggerSpellMessage = new Message(MessageTypes.PreSpellTrigger
-            , new object[]
-            {
-                (ushort)connectionId,
-                (ushort)playerSpellId,
-            }
-            , MessagePriorities.medium);
-            m_messagePublisher.PublishGlobalMessage(preTriggerSpellMessage);
-        }
-
-        public override void Reset()
-        {
-            m_clickTypeCalculator.clicked(false);
+            gameObject.start();
         }
 
         private IEnumerator coolDown()
@@ -101,11 +58,11 @@ namespace Server.Magic
             yield return new WaitForSeconds(timeToActivation / 60);
 
             PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
-            Vector3 placePoint = getPlacePoint(player);
+            Vector3 placePoint = m_spellPlayerUtillity.getPlacementPoint(player, false);
             if (placePoint != Vector3.zero)
             {
                 makeInstance(placePoint);
-                sendTrigger(placePoint);
+                m_spellNetworkingUtillity.sendAOETrigger(playerSpellId, connectionId, placePoint);
             }
         }
     }

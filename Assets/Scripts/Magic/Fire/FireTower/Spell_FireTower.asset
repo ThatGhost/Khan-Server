@@ -15,11 +15,8 @@ MonoBehaviour:
   p_rules:
   - {fileID: 11400000, guid: 18bead43af10c4fe1bf22b5f7297c3f3, type: 2}
   prefab: {fileID: 4354003001387672857, guid: 9e3104dbecf97406e8e28ee83f410678, type: 3}
-  icon: {fileID: 0}
-  localAnimation: {fileID: 0}
-  playerAnimation: {fileID: 0}
   spellId: 1
   timeToActivation: 55
-  cooldown: 5
+  cooldown: 1
   size: 5
   enabled: 1

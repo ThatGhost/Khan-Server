@@ -4,13 +4,18 @@ using UnityEngine;
 
 namespace Server.Magic
 {
-    public class ClickTypeCalculator : IClickTypeCalculator
+    public class SpellClickUtillity : ISpellClickUtillity
     {
         private bool previousClick = false;
 
         public void clicked(bool clicked)
         {
             previousClick = clicked;
+        }
+
+        public bool isAny(bool clicked)
+        {
+            return previousClick == clicked;
         }
 
         public bool isDown(bool clicked)

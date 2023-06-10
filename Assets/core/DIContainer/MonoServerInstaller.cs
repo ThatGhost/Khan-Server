@@ -47,7 +47,6 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsTransient();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
         Container.Bind<ISpellInitializer>().To<SpellInitializer>().AsSingle();
-        Container.Bind<IClickTypeCalculator>().To<ClickTypeCalculator>().AsTransient();
     }
 
     private void registerBehaviours()
