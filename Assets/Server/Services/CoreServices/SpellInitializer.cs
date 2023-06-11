@@ -31,7 +31,7 @@ namespace Networking.Services
             m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(spell.Key, new PlayerSpell()
             {
                 spell = spell,
-                playerSpellId = m_currentPlayerSpellId,
+                playerSpellId = spell.PlayerSpellId,
             });
 
             sendConnectionSpellToConnection(connection, spell);

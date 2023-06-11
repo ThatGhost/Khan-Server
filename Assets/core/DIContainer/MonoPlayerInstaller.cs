@@ -9,5 +9,6 @@ public class MonoPlayerInstaller : MonoInstaller
     {
         Container.Bind<IPlayerPositionBehaviour>().To<PlayerPositionBehaviour>().FromComponentOnRoot().AsSingle();
         Container.Bind<IPlayerSpellController>().To<PlayerSpellController>().AsSingle();
+        Container.Bind<IPlayerVariableService>().To<PlayerVariableService>().AsSingle();
     }
 }

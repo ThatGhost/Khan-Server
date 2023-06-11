@@ -14016,6 +14016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   g_root: {fileID: 1848088124}
+  g_spellPoolObject: {fileID: 856844291}
   playerPrefab: {fileID: 8657024530226801537, guid: fded64c9209e34dce90d810f01679876, type: 3}
   spell_Fire_FlameTower: {fileID: 3836713156113414192, guid: 8fde41d6d48a34d65ade74e0037cafc7, type: 3}
 --- !u!114 &1704761315

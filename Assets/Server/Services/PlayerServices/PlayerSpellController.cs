@@ -33,5 +33,13 @@ namespace Networking.Services
             m_playerSpells.Add(key, playerSpell);
         }
 
+        public bool playerOwnsSpell(int playerSpellId)
+        {
+            foreach (var key in m_playerSpells.Values)
+            {
+                if (key.playerSpellId == playerSpellId) return true;
+            }
+            return false;
+        }
     }
 }

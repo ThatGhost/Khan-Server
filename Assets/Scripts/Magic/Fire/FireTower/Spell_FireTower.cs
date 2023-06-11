@@ -12,6 +12,9 @@ namespace Server.Magic
     public class Spell_FireTower : Spell
     {
         public float size = 1;
+        public float timeUntilDamage = 9;
+        public int damage = 10;
+        public int manaCost = 10;
 
         public bool enabled = true;
 
@@ -19,6 +22,7 @@ namespace Server.Magic
         [Inject] private readonly ISpellPoolUtillity m_spellPoolUtillity;
         [Inject] private readonly ISpellNetworkingUtillity m_spellNetworkingUtillity;
         [Inject] private readonly ISpellPlayerUtillity m_spellPlayerUtillity;
+        [Inject] private readonly IPlayersVariableService m_playersVariableService;
 
         public override void Initialize(int connectionId, int playerSpellId, int key)
         {
@@ -28,7 +32,9 @@ namespace Server.Magic
 
         public override void Trigger(object[] metaData)
         {
-            if (enabled)
+            PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
+
+            if (enabled && player._playerVariableService.Mana >= manaCost)
             {
                 enabled = false;
 
@@ -62,6 +68,7 @@ namespace Server.Magic
             if (placePoint != Vector3.zero)
             {
                 makeInstance(placePoint);
+                m_playersVariableService.routeMana(playerSpellId, -manaCost);
                 m_spellNetworkingUtillity.sendAOETrigger(playerSpellId, connectionId, placePoint);
             }
         }

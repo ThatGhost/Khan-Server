@@ -26,6 +26,29 @@ namespace Networking.Services
         public void receiveInput(PlayerRefrenceObject connection, SInput inputs);
         public void addSpell(int key, PlayerSpell playerSpell);
         public Spell[] getSpells();
+        public bool playerOwnsSpell(int playerSpellId);
+    }
+
+    public interface IPlayerVariableService
+    {
+        public void setup(int connectionId);
+        public void addHp(int amount);
+        public void addMana(int amount);
+
+        public delegate void OnDeath(int connectionId);
+        public OnDeath onDeath { get; set; }
+        public int Mana { get; }
+        public int Health { get; }
+        public int MaxMana { get; set; }
+        public int MaxHealth { get; set; }
+    }
+
+    public interface IPlayersVariableService
+    {
+        public void routeHealth(GameObject[] playerObject, int amount);
+        public void routeHealth(GameObject[] playerObject, int amount, int playerSpellId);
+        public void routeMana(int playerSpellId, int amount);
+        public void onDeath(int connectionId);
     }
 
     public struct PlayerRefrenceObject
@@ -35,6 +58,7 @@ namespace Networking.Services
         public PlayerBehaviour _playerBehaviour;
         public PlayerPositionBehaviour _playerPositionBehaviour;
         public IPlayerSpellController _playerSpellController;
+        public IPlayerVariableService _playerVariableService;
     }
 
     public struct PlayerSpell

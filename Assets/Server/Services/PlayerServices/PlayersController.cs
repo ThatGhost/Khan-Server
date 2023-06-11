@@ -13,6 +13,7 @@ namespace Networking.Services
 {
     public class PlayersController: IPlayersController
     {
+        [Inject] private readonly IPlayersVariableService m_playersVariableService;
         private Dictionary<ConnectionId, PlayerRefrenceObject> m_playerRefrences = new Dictionary<ConnectionId, PlayerRefrenceObject>();
 
         public void AddPlayer(PlayerBehaviour playerBehaviour, ConnectionId connection)
@@ -25,6 +26,9 @@ namespace Networking.Services
                 playerRefrenceObject._playerBehaviour = playerBehaviour;
                 playerRefrenceObject._playerPositionBehaviour = playerRefrenceObject._gameObject.GetComponent<PlayerPositionBehaviour>();
                 playerRefrenceObject._playerSpellController = playerBehaviour.m_playerSpellController;
+                playerRefrenceObject._playerVariableService = playerBehaviour.m_playerVariableService;
+                playerRefrenceObject._playerVariableService.setup(connection);
+                playerRefrenceObject._playerVariableService.onDeath = m_playersVariableService.onDeath;
                 m_playerRefrences.Add(connection, playerRefrenceObject);
             }
         }

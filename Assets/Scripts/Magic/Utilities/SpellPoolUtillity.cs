@@ -10,6 +10,7 @@ namespace Server.Magic
     public class SpellPoolUtillity : ISpellPoolUtillity
     {
         [Inject] private readonly DiContainer m_container;
+        [Inject(Id = "spellPoolRoot")] private readonly Transform g_spellPoolObject;
 
         private List<PrefabBuilder> m_pool = new List<PrefabBuilder>();
         private GameObject m_prefab;
@@ -46,6 +47,7 @@ namespace Server.Magic
             m_pool.Add(newPoolObject);
             newPoolObject.build(spell);
             newPoolObject.onDestruction += onDestructionOfPrefab;
+            newPoolObject.gameObject.transform.SetParent(g_spellPoolObject);
 
             return (T)newPoolObject;
         }
