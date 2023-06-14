@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using Khan_Shared.Magic;
-using Server.Magic;
 using UnityEngine;
 using Zenject;
+using Networking.Services;
 
 namespace Server.Magic
 {
@@ -11,6 +11,7 @@ namespace Server.Magic
     {
         [Inject] private readonly DiContainer m_container;
         [Inject(Id = "spellPoolRoot")] private readonly Transform g_spellPoolObject;
+        [Inject] private readonly IMonoHelper m_monoHelper;
 
         private List<PrefabBuilder> m_pool = new List<PrefabBuilder>();
         private GameObject m_prefab;
@@ -55,6 +56,22 @@ namespace Server.Magic
         private void onDestructionOfPrefab(PrefabBuilder obj)
         {
             release(obj.gameObject);
+        }
+
+        public void destruct()
+        {
+            m_monoHelper.StartCoroutine(destructObjects());
+        }
+
+        private IEnumerator destructObjects()
+        {
+            while(m_pool.Count > 0)
+            {
+                m_monoHelper.Destroy(m_pool[0].gameObject);
+                m_pool.RemoveAt(0);
+
+                yield return null;
+            }
         }
     }
 }

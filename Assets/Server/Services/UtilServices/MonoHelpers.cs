@@ -9,5 +9,10 @@ namespace Networking.Services
         {
             return MonoBehaviour.Instantiate(o);
         }
+
+        public new void Destroy(Object obj, float t = 0.0f)
+        {
+            MonoBehaviour.Destroy(obj, t);
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace Server.Magic
         public T request<T>(Spell spell) where T : PrefabBuilder;
         public void release(GameObject gameObject);
         public void setup(GameObject prefab);
+        public void destruct();
     }
 
     public interface ISpellPlayerUtillity

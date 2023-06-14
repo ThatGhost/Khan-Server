@@ -55,5 +55,10 @@ namespace Networking.Services
         {
             return m_playerRefrences.Select(p => p.Value).ToArray();
         }
+
+        public void removePlayer(ConnectionId connection)
+        {
+            m_playerRefrences.Remove(connection);
+        }
     }
 }

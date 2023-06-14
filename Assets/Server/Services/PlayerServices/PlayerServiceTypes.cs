@@ -16,6 +16,7 @@ namespace Networking.Services
     public interface IPlayersController
     {
         public void AddPlayer(PlayerBehaviour playerBehaviour, int connection);
+        public void removePlayer(int connection);
         public PlayerRefrenceObject? getPlayer(int connection);
         public PlayerRefrenceObject? getPlayer(GameObject gameObject);
         public PlayerRefrenceObject[] getPlayers();
@@ -27,6 +28,7 @@ namespace Networking.Services
         public void addSpell(int key, PlayerSpell playerSpell);
         public Spell[] getSpells();
         public bool playerOwnsSpell(int playerSpellId);
+        public void destructSpells();
     }
 
     public interface IPlayerVariableService

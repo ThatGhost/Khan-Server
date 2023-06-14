@@ -45,6 +45,7 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IClockService>().To<ClockService>().AsTransient();
         Container.Bind<ILoggerService>().To<LoggerService>().AsTransient();
         Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsTransient().NonLazy();
+        Container.Bind<IClientDestructorService>().To<ClientDestructorService>().AsTransient();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
         Container.Bind<IPlayersController>().To<PlayersController>().AsSingle().NonLazy();
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsTransient();

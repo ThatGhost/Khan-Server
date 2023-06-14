@@ -14,6 +14,7 @@ namespace Networking.Services
         public Coroutine StartCoroutine(IEnumerator enumerator);
         public void StopCoroutine(Coroutine enumerator);
         public Object Instantiate(Object o);
+        public void Destroy(Object obj, float t = 0.0f);
     }
 
     public interface ILoggerService

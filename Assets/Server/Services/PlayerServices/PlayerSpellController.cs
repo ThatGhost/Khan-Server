@@ -41,5 +41,13 @@ namespace Networking.Services
             }
             return false;
         }
+
+        public void destructSpells()
+        {
+            foreach (var spell in m_playerSpells)
+            {
+                spell.Value.spell.Destruct();
+            }
+        }
     }
 }

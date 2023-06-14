@@ -28,11 +28,9 @@ namespace Networking.Core
         public delegate void OnClientConnect(int internalId);
         public static OnClientConnect onClientConnect;
 
-        public delegate void OnClientDisconnect(int internalId);
-        public static OnClientDisconnect onClientDisconnect;
-
         [Inject] private readonly IMessageQueue m_messageQueue;
         [Inject] private readonly IMonoHelper m_monoHelper;
+        [Inject] private readonly IClientDestructorService m_clientDestructorService;
 
         public int Tick
         {
@@ -113,7 +111,7 @@ namespace Networking.Core
         private IEnumerator clientConnectWhaitTime(int conn)
         {
             yield return new WaitForSeconds(0f);
-            Debug.Log($"Client connected {conn}");
+            Debug.Log($"Client {conn} connected");
             if (GameServer.onClientConnect != null)
                GameServer.onClientConnect.Invoke(conn);
         }
@@ -131,7 +129,7 @@ namespace Networking.Core
                 {
                     if (cmd == NetworkEvent.Type.Disconnect)
                     {
-                        //GameServer.onClientDisconnect.Invoke(m_connections[i].InternalId);
+                        disconnectClient(i);
                         continue;
                     }
 
@@ -158,7 +156,7 @@ namespace Networking.Core
                         int code = m_networkDriver.BeginSend(m_updatePipeline, m_connections[i], out var writer);
 
                         if (code == 0) m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
-                        else throw new System.Exception($"Cant send data to server, writer exited with code {code}");
+                        else disconnectClient(i);
 
                         m_networkDriver.EndSend(writer);
                     }
@@ -169,17 +167,23 @@ namespace Networking.Core
                         int code = m_networkDriver.BeginSend(m_relaiblePipeline, m_connections[i], out var writer);
 
                         if (code == 0) m_messageQueue.DequeuRelaibleMessages(ref writer, m_connections[i].InternalId);
-                        else throw new System.Exception($"Cant send data to client, writer exited with code {code}");
+                        else disconnectClient(i);
 
                         m_networkDriver.EndSend(writer);
                     }
                 }
                 catch (System.Exception err)
                 {
-                    m_connections[i] = default(NetworkConnection);
-                    Debug.Log($"connection {i} timed out\n with err {err}");
+                    disconnectClient(i);
                 }
             }
+        }
+
+        private void disconnectClient(int connectionId)
+        {
+            Debug.Log($"Client {connectionId} Left");
+            m_connections[connectionId] = default(NetworkConnection);
+            m_clientDestructorService.DestructClient(connectionId);
         }
     }
 }

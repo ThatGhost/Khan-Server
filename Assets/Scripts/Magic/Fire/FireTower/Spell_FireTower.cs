@@ -72,5 +72,10 @@ namespace Server.Magic
                 m_spellNetworkingUtillity.sendAOETrigger(playerSpellId, connectionId, placePoint);
             }
         }
+
+        public override void Destruct()
+        {
+            m_spellPoolUtillity.destruct();
+        }
     }
 }
