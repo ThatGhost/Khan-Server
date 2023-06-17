@@ -56,7 +56,8 @@ public class MonoServerInstaller : MonoInstaller
 
     private void registerBehaviours()
     {
-        Container.Bind<TestBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
+        // Container.Bind<TestBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
+        Container.Bind<IDebugStatBehaviour>().To<DebugStatBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
     }
 
     private void registerFactories()

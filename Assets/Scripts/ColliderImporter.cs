@@ -8,6 +8,7 @@ public class ColliderImporter : MonoBehaviour
 {
     public string path;
     public Transform root;
+    public PhysicMaterial defaultMaterial;
 
     private void Start()
     {
@@ -25,6 +26,8 @@ public class ColliderImporter : MonoBehaviour
             UnityEngine.BoxCollider box = newGameObject.AddComponent<UnityEngine.BoxCollider>();
             box.size = new Vector3(boxCollider.sizex, boxCollider.sizey, boxCollider.sizez);
             box.center = new Vector3(boxCollider.centerX, boxCollider.centerY, boxCollider.centerZ);
+            box.sharedMaterial = defaultMaterial;
+            box.material = defaultMaterial;
 
             newGameObject.transform.SetParent(root);
         }
@@ -41,6 +44,8 @@ public class ColliderImporter : MonoBehaviour
             box.height = capsuleColliser.height;
             box.radius = capsuleColliser.radius;
             box.direction = capsuleColliser.direction;
+            box.sharedMaterial = defaultMaterial;
+            box.material = defaultMaterial;
 
             newGameObject.transform.SetParent(root);
         }
@@ -55,6 +60,8 @@ public class ColliderImporter : MonoBehaviour
             UnityEngine.SphereCollider box = newGameObject.AddComponent<UnityEngine.SphereCollider>();
             box.radius = sphereCollider.radius;
             box.center = new Vector3(sphereCollider.centerX, sphereCollider.centerY, sphereCollider.centerZ);
+            box.sharedMaterial = defaultMaterial;
+            box.material = defaultMaterial;
 
             newGameObject.transform.SetParent(root);
         }

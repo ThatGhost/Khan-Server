@@ -4,12 +4,11 @@ using UnityEngine;
 
 using Unity.Collections;
 using Unity.Networking.Transport;
-using Unity.Networking.Transport.Utilities;
+using Networking.Behaviours;
 using Zenject;
 
 using Khan_Shared.Networking;
 using Networking.Services;
-using static Networking.Core.GameServer;
 
 namespace Networking.Core
 {
@@ -31,6 +30,7 @@ namespace Networking.Core
         [Inject] private readonly IMessageQueue m_messageQueue;
         [Inject] private readonly IMonoHelper m_monoHelper;
         [Inject] private readonly IClientDestructorService m_clientDestructorService;
+        [Inject] private readonly IDebugStatBehaviour m_debugStatBehaviour;
 
         public int Tick
         {
@@ -158,6 +158,7 @@ namespace Networking.Core
                         if (code == 0) m_messageQueue.DequeueMessages(ref writer, m_connections[i].InternalId);
                         else disconnectClient(i);
 
+                        m_debugStatBehaviour.addBytesOut(writer.Length);
                         m_networkDriver.EndSend(writer);
                     }
 
@@ -169,6 +170,7 @@ namespace Networking.Core
                         if (code == 0) m_messageQueue.DequeuRelaibleMessages(ref writer, m_connections[i].InternalId);
                         else disconnectClient(i);
 
+                        m_debugStatBehaviour.addBytesOut(writer.Length);
                         m_networkDriver.EndSend(writer);
                     }
                 }

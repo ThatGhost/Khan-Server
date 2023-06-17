@@ -24,9 +24,9 @@ namespace Server.Magic
         [Inject] private readonly ISpellPlayerUtillity m_spellPlayerUtillity;
         [Inject] private readonly IPlayersVariableService m_playersVariableService;
 
-        public override void Initialize(int connectionId, int playerSpellId, int key)
+        public override void Initialize(int connectionId, int playerSpellId)
         {
-            base.Initialize(connectionId, playerSpellId, key);
+            base.Initialize(connectionId, playerSpellId);
             m_spellPoolUtillity.setup(this.prefab);
         }
 

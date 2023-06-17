@@ -10,6 +10,7 @@ namespace Networking.Behaviours
     {
         [SerializeField] private Transform face;
         [SerializeField] private Transform feet;
+        [SerializeField] private AnimationCurve speedToVelocity;
 
         public float moveSpeed = 5f;
         public float jumpForce = 5f;
@@ -18,8 +19,6 @@ namespace Networking.Behaviours
         public float friction = 1f;
 
         private Rigidbody m_rigidbody;
-        private Quaternion m_targetRotation;
-        private Quaternion m_cameraTargetRotation;
 
         private bool moveUp;
         private bool moveDown;
@@ -41,7 +40,6 @@ namespace Networking.Behaviours
         private void Start()
         {
             m_rigidbody = GetComponent<Rigidbody>();
-            m_targetRotation = transform.rotation;
         }
 
         public void updateInput(SInput input)
@@ -74,7 +72,8 @@ namespace Networking.Behaviours
 
             // Movement
             Vector3 moveDirection = CalculateMoveDirection();
-            AddForce(moveDirection * moveSpeed);
+            float force = speedToVelocity.Evaluate(m_velocity.magnitude / maxVelocity);
+            AddForce(moveDirection * (moveSpeed * force));
 
             ApplyForce();
         }
@@ -110,12 +109,12 @@ namespace Networking.Behaviours
             m_velocity = Vector3.Lerp(m_velocity, Vector3.zero, Time.fixedDeltaTime * friction);
         }
 
-        private void AddForce(Vector3 force)
+        public void AddForce(Vector3 force)
         {
             m_velocity += force;
-            float yvel = m_velocity.y;
-            m_velocity = Vector3.ClampMagnitude(m_velocity, maxVelocity);
-            m_velocity.y = yvel;
+            // float yvel = m_velocity.y;
+            // m_velocity = Vector3.ClampMagnitude(m_velocity, maxVelocity);
+            // m_velocity.y = yvel;
         }
     }
 }

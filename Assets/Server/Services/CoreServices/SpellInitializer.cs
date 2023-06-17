@@ -16,46 +16,39 @@ namespace Networking.Services
 
         private int m_currentPlayerSpellId = 1;
 
-        private SpellIds spellId = SpellIds.Fire_FireTower;
-        private SpellModifierIds[] modifierIds = new SpellModifierIds[]
-        {
-            SpellModifierIds.FireTower_MakeBigger,
-            SpellModifierIds.FireTower_MakeBigger,
-            SpellModifierIds.FireTower_MakeBigger,
-        };
+        // TEMP until outside storage
+        private SpellIds[] spellIds = new SpellIds[]{ SpellIds.Fire_FireTower, SpellIds.Air_AirDash };
 
         public void InitializeSpells(ConnectionId connection)
         {
-            Spell spell = makeSpellForConnection(connection, 0);
-
-            m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(spell.Key, new PlayerSpell()
+            int key = 0;
+            foreach (var spellId in spellIds)
             {
-                spell = spell,
-                playerSpellId = spell.PlayerSpellId,
-            });
+                Spell spell = makeSpellForConnection(connection, spellId);
 
-            sendConnectionSpellToConnection(connection, spell);
-            sendOtherSpellsToConnection(connection);
-            sendConnectionSpellToOthers(connection, spell);
+                m_playerController.getPlayer(connection).Value._playerSpellController.addSpell(new PlayerSpell()
+                {
+                    spell = spell,
+                    playerSpellId = spell.PlayerSpellId,
+                }, key);
+                key++;
+
+                sendConnectionSpellToConnection(connection, spell);
+                sendOtherSpellsToConnection(connection);
+                sendConnectionSpellToOthers(connection, spell);
+            }
         }
 
-        private Spell makeSpellForConnection(ConnectionId connection, int key)
+        private Spell makeSpellForConnection(ConnectionId connection, SpellIds spellId)
         {
-            // TEMP -- until outside spell storage per player
             Spell spell = m_container.ResolveId<Spell>(spellId);
 
             Spell instanceOfSpell = (Spell)(m_monoHelper.Instantiate(spell));
             m_container.Inject(instanceOfSpell);
 
-            foreach (var modifierId in modifierIds)
-            {
-                SpellModifier modifier = m_container.ResolveId<SpellModifier>(modifierId);
-                instanceOfSpell.ApplyModifiers(modifier);
-            }
-            instanceOfSpell.Initialize(connection, m_currentPlayerSpellId, key);
+            instanceOfSpell.Initialize(connection, m_currentPlayerSpellId);
             m_currentPlayerSpellId++;
             return instanceOfSpell;
-            // -- TEMP
         }
 
         private void sendConnectionSpellToConnection(ConnectionId connection, Spell spell)
@@ -65,10 +58,9 @@ namespace Networking.Services
                 (ushort)connection,
                 (ushort)spell.PlayerSpellId,
                 (ushort)spell.spellId,
-                (uint)spell.AppliedModifiers[0],
-                (uint)spell.AppliedModifiers[1],
-                (uint)spell.AppliedModifiers[2],
-                (byte)spell.Key,
+                (uint)0,
+                (uint)0,
+                (uint)0,
             }, MessagePriorities.high, true);
             m_messagePublisher.PublishMessage(initializeSpellMessage, connection);
         }
@@ -86,10 +78,9 @@ namespace Networking.Services
                         (ushort)player._connectionId,
                         (ushort)spell.PlayerSpellId,
                         (ushort)spell.spellId,
-                        (uint)spell.AppliedModifiers[0],
-                        (uint)spell.AppliedModifiers[1],
-                        (uint)spell.AppliedModifiers[2],
-                        (byte)spell.Key,
+                        (uint)0,
+                        (uint)0,
+                        (uint)0,
                     }, MessagePriorities.high, true);
                     m_messagePublisher.PublishMessage(initializeSpellMessage, connection);
                 }
@@ -103,10 +94,9 @@ namespace Networking.Services
                 (ushort)connection,
                 (ushort)spell.PlayerSpellId,
                 (ushort)spell.spellId,
-                (uint)spell.AppliedModifiers[0],
-                (uint)spell.AppliedModifiers[1],
-                (uint)spell.AppliedModifiers[2],
-                (byte)spell.Key
+                (uint)0,
+                (uint)0,
+                (uint)0,
             }, MessagePriorities.high, true);
             m_messagePublisher.PublishGlobalMessage(initializeSpellMessage);
         }

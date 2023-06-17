@@ -25,7 +25,7 @@ namespace Networking.Services
     public interface IPlayerSpellController
     {
         public void receiveInput(PlayerRefrenceObject connection, SInput inputs);
-        public void addSpell(int key, PlayerSpell playerSpell);
+        public void addSpell(PlayerSpell playerSpell, int key);
         public Spell[] getSpells();
         public bool playerOwnsSpell(int playerSpellId);
         public void destructSpells();

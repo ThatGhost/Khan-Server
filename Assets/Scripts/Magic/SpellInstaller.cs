@@ -8,12 +8,14 @@ using Zenject;
 public class SpellInstaller : ScriptableObjectInstaller<SpellInstaller>
 {
     public SpellModifierCombination fire_FireTower;
+    public SpellModifierCombination air_AirDash;
 
     public override void InstallBindings()
     {
         InstallUtillities();
 
         bindSpell(fire_FireTower);
+        bindSpell(air_AirDash);
     }
 
     private void InstallUtillities()

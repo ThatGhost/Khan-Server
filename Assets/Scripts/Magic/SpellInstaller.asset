@@ -16,3 +16,7 @@ MonoBehaviour:
     spell: {fileID: 11400000, guid: 76f8088e4492047319ef2b4faec9de38, type: 2}
     modifiers:
     - {fileID: 11400000, guid: afd89e214aea64455abac73374a3fd55, type: 2}
+  air_AirDash:
+    spell: {fileID: 11400000, guid: f4c5bd17411604ed88fb2997ab74fdbb, type: 2}
+    modifiers:
+    - {fileID: 11400000, guid: 6b4291d89d1424abebb8030aecceebf2, type: 2}

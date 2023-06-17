@@ -7,6 +7,12 @@ namespace Server.Magic
 {
     public class SpellPlayerUtillity : ISpellPlayerUtillity
     {
+        public Vector3 getLookDirection(PlayerRefrenceObject playerRefrence)
+        {
+            Transform face = playerRefrence._playerPositionBehaviour.Face;
+            return face.forward;
+        }
+
         public Vector3 getPlacementPoint(PlayerRefrenceObject playerRefrence, bool onGround)
         {
             if (onGround) throw new System.NotImplementedException();

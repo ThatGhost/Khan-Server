@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Networking.Transport;
-using UnityEngine;
 
 using Khan_Shared.Networking;
 using Networking.EntryPoints;
+using Networking.Behaviours;
 
 using Zenject;
 using ConnectionId = System.Int32;
@@ -15,6 +15,7 @@ namespace Networking.Core
     {
         [Inject] private readonly ICoder m_Coder;
         [Inject] private readonly IEntryPointRegistry m_entryPointRegistry;
+        [Inject] private readonly IDebugStatBehaviour m_debugStatBehaviour;
 
         private Dictionary<ConnectionId, Queue<Message>> out_queue;
         private Dictionary<ConnectionId, Queue<Message>> in_queue;
@@ -100,9 +101,12 @@ namespace Networking.Core
             if (!out_queue.ContainsKey(connection))
                 out_queue.Add(connection, new Queue<Message>());
 
-            while (out_queue[connection].Count > 0)
+            while (OutQueueSize(connection) > 0)
             {
                 Message msg = out_queue[connection].Dequeue();
+
+                m_debugStatBehaviour.addMessagesOut(1);
+
                 m_Coder.EncodeRawMessage(ref stream, msg);
             }
         }
@@ -127,6 +131,9 @@ namespace Networking.Core
             while (relaible_queue[connection].Count > 0)
             {
                 Message msg = relaible_queue[connection].Dequeue();
+
+                m_debugStatBehaviour.addMessagesOut(1);
+
                 m_Coder.EncodeRawMessage(ref stream, msg);
             }
         }
