@@ -28,13 +28,14 @@ namespace Server.Magic
                 enabled = false;
 
                 Vector3 lookDirection = m_spellPlayerUtillity.getLookDirection(player);
+                lookDirection.y = 0;
                 player._playerPositionBehaviour.AddForce(lookDirection * force);
                 player._playerVariableService.addMana(-manaCost);
 
+                m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, true);
                 m_monoHelper.StartCoroutine(coolDown());
-                m_spellNetworkingUtillity.sendPreTrigger(playerSpellId, connectionId);
-                m_spellNetworkingUtillity.sendAbilityTrigger(playerSpellId, connectionId);
             }
+            else m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
         }
 
         private IEnumerator coolDown()

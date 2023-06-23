@@ -55,7 +55,7 @@ namespace Networking.Services
         {
             m_connectionId = connectionId;
             m_clockService.onClockTick = onClockTick;
-            m_clockService.StartClock(1f);
+            m_clockService.StartClock(0.5f);
         }
 
         public void addHp(int amount)

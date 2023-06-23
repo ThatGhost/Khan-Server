@@ -151,11 +151,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  moveSpeed: 4
+  moveSpeed: 5
   jumpForce: 20
   gravity: 2
   maxVelocity: 15
-  friction: 7
+  friction: 10
 --- !u!54 &3240885869487289013
 Rigidbody:
   m_ObjectHideFlags: 0

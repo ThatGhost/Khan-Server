@@ -31,12 +31,11 @@ namespace Networking.Services
                     spell = spell,
                     playerSpellId = spell.PlayerSpellId,
                 }, key);
-                key++;
 
-                sendConnectionSpellToConnection(connection, spell);
-                sendOtherSpellsToConnection(connection);
-                sendConnectionSpellToOthers(connection, spell);
+                sendConnectionSpellToEveryone(connection, spell, key);
+                key++;
             }
+            sendOtherSpellsToConnection(connection);
         }
 
         private Spell makeSpellForConnection(ConnectionId connection, SpellIds spellId)
@@ -51,20 +50,6 @@ namespace Networking.Services
             return instanceOfSpell;
         }
 
-        private void sendConnectionSpellToConnection(ConnectionId connection, Spell spell)
-        {
-            Message initializeSpellMessage = new Message(MessageTypes.InitializeSpell, new object[]
-            {
-                (ushort)connection,
-                (ushort)spell.PlayerSpellId,
-                (ushort)spell.spellId,
-                (uint)0,
-                (uint)0,
-                (uint)0,
-            }, MessagePriorities.high, true);
-            m_messagePublisher.PublishMessage(initializeSpellMessage, connection);
-        }
-
         private void sendOtherSpellsToConnection(ConnectionId connection)
         {
             PlayerRefrenceObject[] players = m_playerController.getPlayers();
@@ -77,6 +62,7 @@ namespace Networking.Services
                     {
                         (ushort)player._connectionId,
                         (ushort)spell.PlayerSpellId,
+                        (byte)0, // key is only needed for local client
                         (ushort)spell.spellId,
                         (uint)0,
                         (uint)0,
@@ -87,12 +73,13 @@ namespace Networking.Services
             }
         }
 
-        private void sendConnectionSpellToOthers(ConnectionId connection, Spell spell)
+        private void sendConnectionSpellToEveryone(ConnectionId connection, Spell spell, int key)
         {
             Message initializeSpellMessage = new Message(MessageTypes.InitializeSpell, new object[]
             {
                 (ushort)connection,
                 (ushort)spell.PlayerSpellId,
+                (byte)key, // technically only needed for local client
                 (ushort)spell.spellId,
                 (uint)0,
                 (uint)0,

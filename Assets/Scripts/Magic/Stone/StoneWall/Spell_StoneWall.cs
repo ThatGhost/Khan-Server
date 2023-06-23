@@ -8,12 +8,10 @@ using Khan_Shared.Networking;
 
 namespace Server.Magic
 {
-    [CreateAssetMenu(fileName = "FireTower", menuName = "Magic/Fire/FireTower/FireTower")]
-    public class Spell_FireTower : Spell
+    [CreateAssetMenu(fileName = "Spell_StoneWall", menuName = "Magic/Stone/StoneWall/StoneWall")]
+    public class Spell_StoneWall : Spell
     {
         public float size = 1;
-        public float timeUntilDamage = 9;
-        public int damage = 10;
         public int manaCost = 10;
 
         public bool enabled = true;
@@ -46,10 +44,11 @@ namespace Server.Magic
             else m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
         }
 
-        private void makeInstance(Vector3 position)
+        private void makeInstance(Vector3 position, Vector3 direction)
         {
             PrefabBuilder_FFT gameObject = m_spellPoolUtillity.request<PrefabBuilder_FFT>(this);
             gameObject.transform.position = position;
+            gameObject.transform.rotation = Quaternion.Euler(0, direction.y, 0);
 
             gameObject.start();
         }
@@ -66,9 +65,11 @@ namespace Server.Magic
 
             PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
             Vector3 placePoint = m_spellPlayerUtillity.getPlacementPoint(player, false);
+            Vector3 direction = m_spellPlayerUtillity.getLookDirection(player);
+
             if (placePoint != Vector3.zero)
             {
-                makeInstance(placePoint);
+                makeInstance(placePoint, direction);
                 m_playersVariableService.routeMana(playerSpellId, -manaCost);
                 m_spellNetworkingUtillity.sendAOETrigger(playerSpellId, connectionId, placePoint);
             }

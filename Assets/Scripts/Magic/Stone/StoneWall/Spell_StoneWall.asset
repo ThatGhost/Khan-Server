@@ -9,15 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247197192a8bf430bbbe51dee8e0b906, type: 3}
-  m_Name: Spell_AirDash
+  m_Script: {fileID: 11500000, guid: c723120592c1b46d0a86e854cabd7fc7, type: 3}
+  m_Name: Spell_StoneWall
   m_EditorClassIdentifier: 
-  p_rules:
-  - {fileID: 11400000, guid: 10be92c4dcbba40e9aa68f4875164d00, type: 2}
+  p_rules: []
   prefab: {fileID: 0}
-  spellId: 3
+  spellId: 2
   timeToActivation: 0
-  cooldown: 1
+  cooldown: 0
+  size: 1
   manaCost: 10
-  force: 50
   enabled: 1

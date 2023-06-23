@@ -15,7 +15,7 @@ namespace Networking.Services
                 throw new Exception("err.services.player.notfoud");
             
             playerRefrenceObject.Value._playerPositionBehaviour.updateInput(input);
-            playerRefrenceObject.Value._playerSpellController.receiveInput(playerRefrenceObject.Value, input);
+            playerRefrenceObject.Value._playerSpellController.clientTriggerSpell(playerRefrenceObject.Value, input);
         }
     }
 }

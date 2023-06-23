@@ -31,8 +31,7 @@ namespace Server.Magic
 
     public interface ISpellNetworkingUtillity
     {
-        public void sendPreTrigger(int playerSpellId, int connectionId);
+        public void sendPostTrigger(int playerSpellId, int connectionId, bool wasValid);
         public void sendAOETrigger(int playerSpellId, int connectionId, Vector3 position);
-        public void sendAbilityTrigger(int playerSpellId, int connectionId);
     }
 }
