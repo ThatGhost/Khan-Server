@@ -46,9 +46,9 @@ namespace Server.Magic
 
         private void makeInstance(Vector3 position, Vector3 direction)
         {
-            PrefabBuilder_FFT gameObject = m_spellPoolUtillity.request<PrefabBuilder_FFT>(this);
-            gameObject.transform.position = position;
-            gameObject.transform.rotation = Quaternion.Euler(0, direction.y, 0);
+            PrefabBuilder_SSW gameObject = m_spellPoolUtillity.request<PrefabBuilder_SSW>(this);
+            gameObject.transform.localPosition = position;
+            gameObject.transform.localRotation = Quaternion.Euler(direction);
 
             gameObject.start();
         }
@@ -65,13 +65,14 @@ namespace Server.Magic
 
             PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
             Vector3 placePoint = m_spellPlayerUtillity.getPlacementPoint(player, false);
-            Vector3 direction = m_spellPlayerUtillity.getLookDirection(player);
+            Vector3 direction = m_spellPlayerUtillity.getLookDirection(player, true);
+            direction = new Vector3(0, direction.y + 90, 0);
 
             if (placePoint != Vector3.zero)
             {
                 makeInstance(placePoint, direction);
                 m_playersVariableService.routeMana(playerSpellId, -manaCost);
-                m_spellNetworkingUtillity.sendAOETrigger(playerSpellId, connectionId, placePoint);
+                m_spellNetworkingUtillity.sendPlacementTrigger(playerSpellId, connectionId, placePoint, direction);
             }
         }
 

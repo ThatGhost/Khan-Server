@@ -9,6 +9,7 @@ public class SpellInstaller : ScriptableObjectInstaller<SpellInstaller>
 {
     public SpellModifierCombination fire_FireTower;
     public SpellModifierCombination air_AirDash;
+    public SpellModifierCombination stone_StoneWall;
 
     public override void InstallBindings()
     {
@@ -16,6 +17,7 @@ public class SpellInstaller : ScriptableObjectInstaller<SpellInstaller>
 
         bindSpell(fire_FireTower);
         bindSpell(air_AirDash);
+        bindSpell(stone_StoneWall);
     }
 
     private void InstallUtillities()

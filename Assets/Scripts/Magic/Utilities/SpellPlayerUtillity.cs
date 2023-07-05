@@ -7,10 +7,10 @@ namespace Server.Magic
 {
     public class SpellPlayerUtillity : ISpellPlayerUtillity
     {
-        public Vector3 getLookDirection(PlayerRefrenceObject playerRefrence)
+        public Vector3 getLookDirection(PlayerRefrenceObject playerRefrence, bool euler)
         {
             Transform face = playerRefrence._playerPositionBehaviour.Face;
-            return face.forward;
+            return euler ? face.eulerAngles : face.forward;
         }
 
         public Vector3 getPlacementPoint(PlayerRefrenceObject playerRefrence, bool onGround)

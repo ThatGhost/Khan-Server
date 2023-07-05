@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Spell_StoneWall
   m_EditorClassIdentifier: 
   p_rules: []
-  prefab: {fileID: 0}
+  prefab: {fileID: 1999811405936487611, guid: 15d39aea811b948debe7919b7318dd6f, type: 3}
   spellId: 2
   timeToActivation: 0
-  cooldown: 0
+  cooldown: 1
   size: 1
   manaCost: 10
   enabled: 1

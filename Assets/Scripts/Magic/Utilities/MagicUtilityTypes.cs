@@ -26,12 +26,13 @@ namespace Server.Magic
     public interface ISpellPlayerUtillity
     {
         public Vector3 getPlacementPoint(PlayerRefrenceObject playerRefrence, bool onGround);
-        public Vector3 getLookDirection(PlayerRefrenceObject playerRefrence);
+        public Vector3 getLookDirection(PlayerRefrenceObject playerRefrence, bool euler);
     }
 
     public interface ISpellNetworkingUtillity
     {
         public void sendPostTrigger(int playerSpellId, int connectionId, bool wasValid);
         public void sendAOETrigger(int playerSpellId, int connectionId, Vector3 position);
+        public void sendPlacementTrigger(int playerSpellId, int connectionId, Vector3 position, Vector3 rotation);
     }
 }

@@ -20,3 +20,6 @@ MonoBehaviour:
     spell: {fileID: 11400000, guid: f4c5bd17411604ed88fb2997ab74fdbb, type: 2}
     modifiers:
     - {fileID: 11400000, guid: 6b4291d89d1424abebb8030aecceebf2, type: 2}
+  stone_StoneWall:
+    spell: {fileID: 11400000, guid: 1ebf9caeed82247f1bf7de414cd8508a, type: 2}
+    modifiers: []

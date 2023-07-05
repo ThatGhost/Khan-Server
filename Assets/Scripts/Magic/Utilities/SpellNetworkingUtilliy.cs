@@ -28,6 +28,25 @@ namespace Server.Magic
             m_messagePublisher.PublishGlobalMessage(triggerSpellMessage);
         }
 
+        public void sendPlacementTrigger(int playerSpellId, int connectionId, Vector3 position, Vector3 rotation)
+        {
+            Message triggerSpellMessage = new Message(MessageTypes.PlacementTrigger
+            , new object[]
+            {
+                (ushort)connectionId,
+                (ushort)playerSpellId,
+                (float)position.x,
+                (float)position.y,
+                (float)position.z,
+                (float)rotation.x,
+                (float)rotation.y,
+                (float)rotation.z,
+            }
+            , MessagePriorities.medium);
+
+            m_messagePublisher.PublishGlobalMessage(triggerSpellMessage);
+        }
+
         public void sendPostTrigger(int playerSpellId, int connectionId, bool wasValid)
         {
             Message preTriggerSpellMessage = new Message(MessageTypes.PostSpellTrigger

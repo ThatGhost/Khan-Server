@@ -27,7 +27,7 @@ namespace Server.Magic
             {
                 enabled = false;
 
-                Vector3 lookDirection = m_spellPlayerUtillity.getLookDirection(player);
+                Vector3 lookDirection = m_spellPlayerUtillity.getLookDirection(player, false);
                 lookDirection.y = 0;
                 player._playerPositionBehaviour.AddForce(lookDirection * force);
                 player._playerVariableService.addMana(-manaCost);
