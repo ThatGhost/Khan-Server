@@ -16,4 +16,9 @@ namespace Networking.Services
     {
         public void InitializeSpells(int connection);
     }
+
+    public interface IClientDestructorService
+    {
+        public void DestructClient(int connectionId);
+    }
 }

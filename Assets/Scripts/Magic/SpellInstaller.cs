@@ -8,22 +8,32 @@ using Zenject;
 public class SpellInstaller : ScriptableObjectInstaller<SpellInstaller>
 {
     public SpellModifierCombination fire_FireTower;
+    public SpellModifierCombination air_AirDash;
+    public SpellModifierCombination stone_StoneWall;
 
     public override void InstallBindings()
     {
+        InstallUtillities();
+
         bindSpell(fire_FireTower);
-        Container.BindFactory<PrefabBuilder_FFT, PrefabBuilder_FFT.Factory>().FromComponentInNewPrefab(fire_FireTower.spell.prefab);
-
-
+        bindSpell(air_AirDash);
+        bindSpell(stone_StoneWall);
     }
 
-
+    private void InstallUtillities()
+    {
+        Container.Bind<ISpellClickUtillity>().To<SpellClickUtillity>().AsTransient();
+        Container.Bind<ISpellNetworkingUtillity>().To<SpellNetworkingUtillity>().AsTransient();
+        Container.Bind<ISpellPlayerUtillity>().To<SpellPlayerUtillity>().AsTransient();
+        Container.Bind<ISpellPoolUtillity>().To<SpellPoolUtillity>().AsTransient();
+    }
 
 
     // --Don't touch--
     private void bindSpell(SpellModifierCombination spell)
     {
         Container.Bind<Spell>().WithId(spell.spell.spellId).FromInstance(spell.spell);
+        Container.Bind<GameObject>().FromInstance(spell.spell.prefab).WhenInjectedInto<SpellPoolUtillity>();
         foreach (var modifier in spell.modifiers)
         {
             Container.Bind<SpellModifier>().WithId(modifier.modifierId).FromInstance(modifier);

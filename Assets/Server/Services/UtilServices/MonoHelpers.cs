@@ -5,14 +5,14 @@ namespace Networking.Services
 {
     public class MonoHelpers : MonoBehaviour, IMonoHelper
     {
-        public new void StartCoroutine(IEnumerator enumerator)
-        {
-            base.StartCoroutine(enumerator);
-        }
-
         public new Object Instantiate(Object o)
         {
             return MonoBehaviour.Instantiate(o);
+        }
+
+        public new void Destroy(Object obj, float t = 0.0f)
+        {
+            MonoBehaviour.Destroy(obj, t);
         }
     }
 }

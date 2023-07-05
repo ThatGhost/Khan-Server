@@ -11,13 +11,24 @@ namespace Networking.Services
 
     public interface IMonoHelper
     {
-        public void StartCoroutine(IEnumerator enumerator);
+        public Coroutine StartCoroutine(IEnumerator enumerator);
+        public void StopCoroutine(Coroutine enumerator);
         public Object Instantiate(Object o);
+        public void Destroy(Object obj, float t = 0.0f);
     }
 
     public interface ILoggerService
     {
         public void LogMessage(string message);
         public void LogError(string message);
+    }
+
+    public interface IClockService
+    {
+        public void StartClock(float interval);
+        public void StopClock();
+
+        public delegate void OnClockTick();
+        public OnClockTick onClockTick { get; set; }
     }
 }

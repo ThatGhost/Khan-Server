@@ -13,6 +13,7 @@ namespace Networking.EntryPoints
     public class PlayerEntryPoint: EntryPointBase, IPlayerEntryPoint
     {
         [Inject] private readonly IPlayerInputService m_playerInputService;
+
         public PlayerEntryPoint()
         {
             p_messages = new MessageFunctionPair[]

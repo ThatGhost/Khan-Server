@@ -14,7 +14,7 @@ namespace Server.Magic
         {
             if (spell is Spell_FireTower fireTower)
             {
-                if (fireTower.size > 20) fireTower.size = maxSize;
+                if (fireTower.size > maxSize) fireTower.size = maxSize;
             }
         }
     }

@@ -11,6 +11,7 @@ public class MonoServerInstaller : MonoInstaller
 {
     // root
     public Transform g_root;
+    public Transform g_spellPoolObject;
 
     // prefabs
     [SerializeField] private GameObject playerPrefab;
@@ -23,6 +24,7 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IMessageQueue>().To<MessageQueue>().AsSingle();
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
         Container.BindInstance<Transform>(g_root);
+        Container.BindInstance<Transform>(g_spellPoolObject).WithId("spellPoolRoot");
 
         registerEntryPoints();
         registerServices();
@@ -40,19 +42,22 @@ public class MonoServerInstaller : MonoInstaller
     {
         //Container.Bind<IFooService>().To<FooService>().AsSingle();
         Container.Bind<IMonoHelper>().To<MonoHelpers>().FromComponentInHierarchy().AsTransient();
+        Container.Bind<IClockService>().To<ClockService>().AsTransient();
         Container.Bind<ILoggerService>().To<LoggerService>().AsTransient();
         Container.BindInterfacesAndSelfTo<ClientInitializerService>().AsTransient().NonLazy();
+        Container.Bind<IClientDestructorService>().To<ClientDestructorService>().AsTransient();
         Container.Bind<IMessagePublisher>().To<MessagePublisher>().AsSingle();
         Container.Bind<IPlayersController>().To<PlayersController>().AsSingle().NonLazy();
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsTransient();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
         Container.Bind<ISpellInitializer>().To<SpellInitializer>().AsSingle();
-        Container.Bind<IClickTypeCalculator>().To<ClickTypeCalculator>().AsTransient();
+        Container.Bind<IPlayersVariableService>().To<PlayersVariableService>().AsTransient();
     }
 
     private void registerBehaviours()
     {
-        Container.Bind<TestBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
+        // Container.Bind<TestBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
+        Container.Bind<IDebugStatBehaviour>().To<DebugStatBehaviour>().FromComponentOn(g_root.gameObject).AsSingle();
     }
 
     private void registerFactories()
