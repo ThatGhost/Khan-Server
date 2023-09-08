@@ -1,6 +1,5 @@
 {
     "name": "Zenject-UnitTests-Editor",
-    "rootNamespace": "",
     "references": [
         "Zenject",
         "Zenject-TestFramework",
@@ -15,8 +14,7 @@
     "overrideReferences": true,
     "precompiledReferences": [
         "Zenject-usage.dll",
-        "nunit.framework.dll",
-        "Moq.dll"
+        "nunit.framework.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
