@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1191469744099914154}
   - component: {fileID: 7689654205148601054}
   - component: {fileID: 6357996294802257789}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: GFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 9119112930900043858}
   - component: {fileID: 1859248230295539747}
   - component: {fileID: 9158951212065155373}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: Fire_flameTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
