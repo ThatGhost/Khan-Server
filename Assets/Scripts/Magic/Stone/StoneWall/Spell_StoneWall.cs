@@ -64,7 +64,7 @@ namespace Server.Magic
             yield return new WaitForSeconds(timeToActivation / 60);
 
             PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
-            Vector3 placePoint = m_spellPlayerUtillity.getPlacementPoint(player, false);
+            Vector3 placePoint = m_spellPlayerUtillity.getGroundPoint(player);
             Vector3 direction = m_spellPlayerUtillity.getLookDirection(player, true);
             direction = new Vector3(0, direction.y + 90, 0);
 

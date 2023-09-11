@@ -1,3 +1,16 @@
 {
-	"name": "Global-Assembly"
+    "name": "Global-Assembly",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a62552c957569e24aa78fda29b90c205"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

@@ -7,29 +7,44 @@ namespace Server.Magic
 {
     public class SpellPlayerUtillity : ISpellPlayerUtillity
     {
+        public Vector3 getGroundPoint(PlayerRefrenceObject playerRefrence)
+        {
+            Transform face = playerRefrence._playerPositionBehaviour.Face;
+            int layerMask = 1 << 8; // spells can't interact with spells
+            layerMask = ~layerMask;
+
+            RaycastHit hit;
+            if (Physics.Raycast(face.transform.position, face.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+            {
+                RaycastHit groundHit;
+                if (Physics.Raycast(hit.point + hit.normal.normalized * 0.1f, Vector3.down, out groundHit, Mathf.Infinity, layerMask))
+                {
+                    return groundHit.point;
+                }
+                else return hit.point;
+            }
+
+            return Vector3.zero;
+        }
+
         public Vector3 getLookDirection(PlayerRefrenceObject playerRefrence, bool euler)
         {
             Transform face = playerRefrence._playerPositionBehaviour.Face;
             return euler ? face.eulerAngles : face.forward;
         }
 
-        public Vector3 getPlacementPoint(PlayerRefrenceObject playerRefrence, bool onGround)
+        public Vector3 getLookPoint(PlayerRefrenceObject playerRefrence)
         {
-            if (onGround) throw new System.NotImplementedException();
-
             Transform face = playerRefrence._playerPositionBehaviour.Face;
-            int layerMask = 1 << 6; // spells can't interact with spells
+            int layerMask = 1 << 8; // spells can't interact with spells
             layerMask = ~layerMask;
 
-            Vector3 position = Vector3.zero;
             RaycastHit hit;
             if (Physics.Raycast(face.transform.position, face.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
             {
                 return hit.point;
             }
             return Vector3.zero;
-
-            // implement onGround still
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
-using Khan_Shared.Utils;
 using UnityEngine;
+using Khan_Shared.Utils;
 
 namespace Networking.Behaviours
 {

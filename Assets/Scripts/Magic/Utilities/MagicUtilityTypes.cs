@@ -25,7 +25,8 @@ namespace Server.Magic
 
     public interface ISpellPlayerUtillity
     {
-        public Vector3 getPlacementPoint(PlayerRefrenceObject playerRefrence, bool onGround);
+        public Vector3 getGroundPoint(PlayerRefrenceObject playerRefrence);
+        public Vector3 getLookPoint(PlayerRefrenceObject playerRefrence);
         public Vector3 getLookDirection(PlayerRefrenceObject playerRefrence, bool euler);
     }
 
