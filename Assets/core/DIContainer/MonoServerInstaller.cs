@@ -6,6 +6,7 @@ using Networking.EntryPoints;
 using UnityEngine;
 using Zenject;
 using Server.Magic;
+using UnityEngine.ProBuilder;
 
 public class MonoServerInstaller : MonoInstaller
 {

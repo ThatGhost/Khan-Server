@@ -5,7 +5,8 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Server-Assembly",
-        "Unity.Networking.Transport"
+        "Unity.Networking.Transport",
+        "KhanShared"
     ],
     "includePlatforms": [
         "Editor"

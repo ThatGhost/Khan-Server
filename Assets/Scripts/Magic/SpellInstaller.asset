@@ -23,3 +23,6 @@ MonoBehaviour:
   stone_StoneWall:
     spell: {fileID: 11400000, guid: 1ebf9caeed82247f1bf7de414cd8508a, type: 2}
     modifiers: []
+  water_WaterBall:
+    spell: {fileID: 11400000, guid: 2133e4bbeb4b1de4b846da3ca4c27df6, type: 2}
+    modifiers: []

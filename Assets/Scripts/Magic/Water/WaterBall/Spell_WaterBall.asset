@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e5a17b22cf45464c906f11b6d3e2d7b, type: 3}
+  m_Name: Spell_WaterBall
+  m_EditorClassIdentifier: 
+  p_rules: []
+  prefab: {fileID: 1999811405936487611, guid: 8ee81bd254c9d0546aa2206340bd3278, type: 3}
+  spellId: 4
+  timeToActivation: 0
+  cooldown: 0.1
+  size: 1
+  manaCost: 5
+  speed: 5
+  firePosition: {x: 0, y: 0, z: 0.75}
+  enabled: 1

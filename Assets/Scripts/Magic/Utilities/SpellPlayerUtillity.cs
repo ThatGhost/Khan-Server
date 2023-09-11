@@ -13,7 +13,6 @@ namespace Server.Magic
             int layerMask = 1 << 8; // spells can't interact with spells
             layerMask = ~layerMask;
 
-            Vector3 position = Vector3.zero;
             RaycastHit hit;
             if (Physics.Raycast(face.transform.position, face.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
             {
@@ -40,7 +39,6 @@ namespace Server.Magic
             int layerMask = 1 << 8; // spells can't interact with spells
             layerMask = ~layerMask;
 
-            Vector3 position = Vector3.zero;
             RaycastHit hit;
             if (Physics.Raycast(face.transform.position, face.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
             {
