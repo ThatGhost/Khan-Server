@@ -1,7 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+
+using UnityEditor;
+
 using UnityEngine;
 
 public class ColliderImporter : MonoBehaviour
@@ -9,6 +11,7 @@ public class ColliderImporter : MonoBehaviour
     public string path;
     public Transform root;
     public PhysicMaterial defaultMaterial;
+    public string assetPath;
 
     private void Start()
     {
@@ -52,7 +55,7 @@ public class ColliderImporter : MonoBehaviour
 
         foreach (var sphereCollider in colliders.SphereColliders)
         {
-            GameObject newGameObject = new GameObject("CapsuleCollider");
+            GameObject newGameObject = new GameObject("SphereCollider");
             newGameObject.transform.position = new Vector3(sphereCollider.x, sphereCollider.y, sphereCollider.z);
             newGameObject.transform.rotation = Quaternion.Euler(sphereCollider.rotx, sphereCollider.roty, sphereCollider.rotz);
             newGameObject.transform.localScale = new Vector3(sphereCollider.scalex, sphereCollider.scaley, sphereCollider.scalez);
@@ -65,6 +68,39 @@ public class ColliderImporter : MonoBehaviour
 
             newGameObject.transform.SetParent(root);
         }
+
+        string[] aliveAssets = AssetDatabase.FindAssets("", new[] { assetPath });
+        foreach (string guid1 in aliveAssets)
+        {
+            Debug.Log(AssetDatabase.GUIDToAssetPath(guid1));
+        }
+
+        int number = 0;
+        foreach (var meshCollider in colliders.meshColliders)
+        {
+            number++;
+            GameObject newGameObject = new GameObject("MeshCollider");
+            newGameObject.transform.position = new Vector3(meshCollider.x, meshCollider.y, meshCollider.z);
+            newGameObject.transform.rotation = Quaternion.Euler(meshCollider.rotx, meshCollider.roty, meshCollider.rotz);
+            newGameObject.transform.localScale = new Vector3(meshCollider.scalex, meshCollider.scaley, meshCollider.scalez);
+
+            Mesh mesh = new Mesh();
+            mesh.name = "new mesh from json";
+            mesh.vertices = meshCollider.vertices;
+            mesh.triangles = meshCollider.triangles;
+            mesh.normals = meshCollider.normals;
+            AssetDatabase.CreateAsset(mesh, assetPath + "GeneratedMesh" + number + ".asset");
+
+            UnityEngine.MeshFilter meshFilter = newGameObject.AddComponent<UnityEngine.MeshFilter>();
+            meshFilter.sharedMesh = mesh;
+
+            UnityEngine.MeshCollider box = newGameObject.AddComponent<UnityEngine.MeshCollider>();
+            box.sharedMesh = mesh;
+            box.convex = meshCollider.isConvex;
+            box.sharedMaterial = defaultMaterial;
+
+            newGameObject.transform.SetParent(root);
+        }
     }
 
 
@@ -74,6 +110,7 @@ public class ColliderImporter : MonoBehaviour
         public List<BoxCollider> boxColliders = new List<BoxCollider>();
         public List<CapsuleCollider> capsuleColliders = new List<CapsuleCollider>();
         public List<SphereCollider> SphereColliders = new List<SphereCollider>();
+        public List<MeshCollider> meshColliders = new List<MeshCollider>();
     }
 
     [Serializable]
@@ -135,5 +172,23 @@ public class ColliderImporter : MonoBehaviour
         public float centerX;
         public float centerY;
         public float centerZ;
+    }
+
+    [Serializable]
+    private class MeshCollider
+    {
+        public float x;
+        public float y;
+        public float z;
+        public float rotx;
+        public float roty;
+        public float rotz;
+        public float scalex;
+        public float scaley;
+        public float scalez;
+        public bool isConvex;
+        public int[] triangles;
+        public Vector3[] vertices;
+        public Vector3[] normals;
     }
 }

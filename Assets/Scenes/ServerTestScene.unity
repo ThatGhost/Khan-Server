@@ -8798,7 +8798,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa9ff3fbdb2fd486794baf8c823f0a28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: /Users/ibnzwanckaert/Desktop/Colliders.json
+  path: C:\Users\Gebruiker\Documents\Colliders.json
   root: {fileID: 0}
   defaultMaterial: {fileID: 13400000, guid: 5581895478e0b4b6885ec5f3ce978af2, type: 2}
 --- !u!1 &939433551

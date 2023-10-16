@@ -5,33 +5,23 @@ using Zenject;
 using Khan_Shared.Networking;
 using static Networking.Services.IPlayerVariableService;
 using ConnectionId = System.Int32;
+using System;
 
 namespace Networking.Services
 {
-    public class PlayerVariableService : IPlayerVariableService
+    public class PlayerVariableService : IPlayerVariableService, IInitializable, IDisposable
     {
         [Inject] private readonly IMessagePublisher m_messagePublisher;
         [Inject] private readonly IClockService m_clockService;
+        [Inject] private readonly SignalBus m_signalBus;
 
         private ConnectionId m_connectionId;
-        private OnDeath m_onDeath;
 
         private int m_hp = 100;
         private int m_maxHp = 100;
         private int m_maxMana = 100;
         private int m_mana = 100;
 
-        public OnDeath onDeath
-        {
-            get
-            {
-                return m_onDeath;
-            }
-            set
-            {
-                m_onDeath += value;
-            }
-        }
         public int Mana
         {
             get => m_mana;
@@ -51,6 +41,18 @@ namespace Networking.Services
             set => m_maxMana = value;
         }
 
+        public void Initialize()
+        {
+            m_signalBus.Subscribe<OnHealthSignal>(x => addHp(x.amount, x.connectionId));
+            m_signalBus.Subscribe<OnManaSignal>(x => addMana(x.amount, x.connectionId));
+        }
+
+        public void Dispose()
+        {
+            m_signalBus.Unsubscribe<OnHealthSignal>(x => addHp(x.amount, x.connectionId));
+            m_signalBus.Unsubscribe<OnManaSignal>(x => addMana(x.amount, x.connectionId));
+        }
+
         public void setup(ConnectionId connectionId)
         {
             m_connectionId = connectionId;
@@ -58,24 +60,23 @@ namespace Networking.Services
             m_clockService.StartClock(0.5f);
         }
 
-        public void addHp(int amount)
+        private void addHp(int amount, int connectionId)
         {
-            if (m_hp == m_maxHp && amount > 0) return;
+            if (connectionId != m_connectionId) return;
 
             m_hp += amount;
             if (m_hp <= 0) {
                 m_hp = 0;
-                if (m_onDeath != null)
-                    m_onDeath.Invoke(m_connectionId);
+                m_signalBus.Fire(new OnDeathSignal() { connectionId = m_connectionId });
             }
             if(m_hp >= m_maxHp) m_hp = m_maxHp;
 
             sendHpMessage();
         }
 
-        public void addMana(int amount)
+        private void addMana(int amount, int connectionId)
         {
-            if (m_mana == m_maxMana && amount > 0) return;
+            if (connectionId != m_connectionId) return;
 
             m_mana += amount;
             if (m_mana <= 0) m_mana = 0;
@@ -105,7 +106,7 @@ namespace Networking.Services
 
         private void onClockTick()
         {
-            addMana(5);
+            addMana(5, m_connectionId);
         }
     }
 }

@@ -10,13 +10,12 @@ using UnityEngine.ProBuilder;
 
 public class MonoServerInstaller : MonoInstaller
 {
-    // root
     public Transform g_root;
     public Transform g_spellPoolObject;
+    public Transform g_SpawnPoint;
 
     // prefabs
     [SerializeField] private GameObject playerPrefab;
-    [SerializeField] private GameObject spell_Fire_FlameTower;
 
     public override void InstallBindings()
     {
@@ -26,11 +25,14 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IEntryPointRegistry>().To<EntryPointRegistry>().AsSingle();
         Container.BindInstance<Transform>(g_root);
         Container.BindInstance<Transform>(g_spellPoolObject).WithId("spellPoolRoot");
+        Container.BindInstance<Transform>(g_SpawnPoint).WithId("spawnPoint");
+        SignalBusInstaller.Install(Container);
 
         registerEntryPoints();
         registerServices();
         registerBehaviours();
         registerFactories();
+        registerSignals();
     }
 
     private void registerEntryPoints()
@@ -52,7 +54,6 @@ public class MonoServerInstaller : MonoInstaller
         Container.Bind<IPlayerInputService>().To<PlayerInputService>().AsTransient();
         Container.BindInterfacesAndSelfTo<PlayerPositionService>().AsSingle().NonLazy();
         Container.Bind<ISpellInitializer>().To<SpellInitializer>().AsSingle();
-        Container.Bind<IPlayersVariableService>().To<PlayersVariableService>().AsTransient();
     }
 
     private void registerBehaviours()
@@ -64,6 +65,13 @@ public class MonoServerInstaller : MonoInstaller
     private void registerFactories()
     {
         Container.BindFactory<PlayerBehaviour, PlayerBehaviour.Factory>().FromComponentInNewPrefab(playerPrefab);
+    }
+
+    private void registerSignals()
+    {
+        Container.DeclareSignal<OnManaSignal>();
+        Container.DeclareSignal<OnHealthSignal>();
+        Container.DeclareSignal<OnDeathSignal>();
     }
 }
 

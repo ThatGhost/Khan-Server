@@ -12,6 +12,7 @@ namespace Networking.Services
     public class ClientInitializerService : IInitializable, ILateDisposable
     {
         [Inject] private Transform g_root;
+        [Inject(Id = "spawnPoint")] private Transform g_spawnPoint;
         [Inject] private readonly PlayerBehaviour.Factory m_playerFactory;
         [Inject] private readonly IPlayersController m_playersController;
         [Inject] private readonly IMessagePublisher m_messagePublisher;
@@ -33,6 +34,7 @@ namespace Networking.Services
 
             PlayerBehaviour playerhook = m_playerFactory.Create();
             playerhook.gameObject.transform.SetParent(g_root);
+            playerhook.gameObject.transform.position = g_spawnPoint.position; // TEMP
             m_playersController.AddPlayer(playerhook, connection);
 
             sendHandShake(connection);

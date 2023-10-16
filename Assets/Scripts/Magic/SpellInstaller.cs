@@ -28,9 +28,9 @@ public class SpellInstaller : ScriptableObjectInstaller<SpellInstaller>
         Container.Bind<ISpellNetworkingUtillity>().To<SpellNetworkingUtillity>().AsTransient();
         Container.Bind<ISpellPlayerUtillity>().To<SpellPlayerUtillity>().AsTransient();
         Container.Bind<ISpellPoolUtillity>().To<SpellPoolUtillity>().AsTransient();
-        Container.BindInstance(new Vector3(-0.555f, -0.318f, 1.098f)).WithId(FirePositions.FirePosition1).AsSingle();
-        Container.BindInstance(new Vector3(0.555f, -0.318f, 1.098f)).WithId(FirePositions.FirePosition2).AsSingle();
-        Container.BindInstance(new Vector3(0f, -0.494f, 1.098f)).WithId(FirePositions.FirePosition3).AsSingle();
+        Container.BindInstance(new Vector3(-0.555f, -0.318f, 1.098f)).WithId(FirePositions.FirePosition1).AsTransient();
+        Container.BindInstance(new Vector3(0.555f, -0.318f, 1.098f)).WithId(FirePositions.FirePosition2).AsTransient();
+        Container.BindInstance(new Vector3(0f, -0.494f, 1.098f)).WithId(FirePositions.FirePosition3).AsTransient();
     }
 
 

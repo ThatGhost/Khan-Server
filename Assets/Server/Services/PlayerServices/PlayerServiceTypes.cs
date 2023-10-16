@@ -34,11 +34,6 @@ namespace Networking.Services
     public interface IPlayerVariableService
     {
         public void setup(int connectionId);
-        public void addHp(int amount);
-        public void addMana(int amount);
-
-        public delegate void OnDeath(int connectionId);
-        public OnDeath onDeath { get; set; }
         public int Mana { get; }
         public int Health { get; }
         public int MaxMana { get; set; }
