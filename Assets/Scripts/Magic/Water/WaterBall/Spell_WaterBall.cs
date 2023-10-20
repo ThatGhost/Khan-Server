@@ -21,7 +21,7 @@ namespace Server.Magic
         [Inject] private readonly ISpellPoolUtillity m_spellPoolUtillity;
         [Inject] private readonly ISpellNetworkingUtillity m_spellNetworkingUtillity;
         [Inject] private readonly ISpellPlayerUtillity m_spellPlayerUtillity;
-        [Inject] private readonly IPlayersVariableService m_playersVariableService;
+        [Inject] private readonly SignalBus signalBus;
         [Inject(Id = FirePositions.FirePosition1)] public Vector3 firePosition;
 
         public override void Initialize(int connectionId, int playerSpellId)
@@ -37,12 +37,11 @@ namespace Server.Magic
             if (enabled && player._playerVariableService.Mana >= manaCost)
             {
                 enabled = false;
-
                 m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, true);
 
                 makeInstance((PlayerRefrenceObject)metaData[0]);
                 m_monoHelper.StartCoroutine(coolDown());
-                m_playersVariableService.routeMana(playerSpellId, -manaCost);
+                signalBus.Fire(new OnManaSignal() { connectionId = this.connectionId, amount = -manaCost });
             }
             else m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
         }

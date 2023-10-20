@@ -1,5 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6221067657966546680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7775710436551330664}
+  - component: {fileID: 165802812908080740}
+  m_Layer: 7
+  m_Name: MainCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7775710436551330664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6221067657966546680}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8657024530226801541}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &165802812908080740
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6221067657966546680}
+  m_Material: {fileID: 13400000, guid: 5581895478e0b4b6885ec5f3ce978af2, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.2
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8346868047086859698
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,8 +90,7 @@ GameObject:
   - component: {fileID: 6336837352652804006}
   - component: {fileID: 6366498254127225000}
   - component: {fileID: 8657024530226801546}
-  - component: {fileID: 3240885869487289013}
-  - component: {fileID: 8600808970324826184}
+  - component: {fileID: 4363253078761109483}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -68,6 +113,7 @@ Transform:
   - {fileID: 8657024531877707710}
   - {fileID: 8657024530243258358}
   - {fileID: 1108606729702607282}
+  - {fileID: 7775710436551330664}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -156,7 +202,7 @@ MonoBehaviour:
   gravity: 2
   maxVelocity: 15
   friction: 10
---- !u!54 &3240885869487289013
+--- !u!54 &4363253078761109483
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,20 +218,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 2
---- !u!136 &8600808970324826184
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8657024530226801537}
-  m_Material: {fileID: 13400000, guid: 5581895478e0b4b6885ec5f3ce978af2, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.2
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8657024530243258353
 GameObject:
   m_ObjectHideFlags: 0

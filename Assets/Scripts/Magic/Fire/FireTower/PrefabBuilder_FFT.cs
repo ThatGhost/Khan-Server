@@ -10,7 +10,7 @@ namespace Server.Magic
 {
     public class PrefabBuilder_FFT : PrefabBuilder
     {
-        [Inject] private readonly IPlayersVariableService m_playersVariableService;
+        [Inject] private readonly SignalBus m_signalBus;
 
         // Components
         private float timeUntilDamage;
@@ -39,7 +39,13 @@ namespace Server.Magic
         private IEnumerator timeTillDamage()
         {
             yield return new WaitForSeconds(timeUntilDamage);
-            m_playersVariableService.routeHealth(m_collidedPlayers.ToArray(), -damage, playerSpellId);
+            foreach (var player in m_collidedPlayers)
+            {
+                if(player.transform.parent.TryGetComponent(out PlayerBehaviour playerBehaviour))
+                {
+                    playerBehaviour.m_playerVariableService.addHealth(-damage);
+                }
+            }
         }
 
         private IEnumerator die(float deathTime)

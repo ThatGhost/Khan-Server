@@ -2,10 +2,8 @@ using Server.Core;
 using Server.Services;
 using Server.Behaviours;
 using Server.EntryPoints;
-
 using UnityEngine;
 using Zenject;
-using Server.Magic;
 
 public class MonoServerInstaller : MonoInstaller
 {

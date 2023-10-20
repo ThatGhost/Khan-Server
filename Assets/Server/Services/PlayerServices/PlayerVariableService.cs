@@ -6,6 +6,7 @@ using Khan_Shared.Networking;
 using static Server.Services.IPlayerVariableService;
 using ConnectionId = System.Int32;
 using System;
+using UnityEditor.MemoryProfiler;
 
 namespace Server.Services
 {
@@ -62,16 +63,7 @@ namespace Server.Services
 
         private void addHp(int amount, int connectionId)
         {
-            if (connectionId != m_connectionId) return;
-
-            m_hp += amount;
-            if (m_hp <= 0) {
-                m_hp = 0;
-                m_signalBus.Fire(new OnDeathSignal() { connectionId = m_connectionId });
-            }
-            if(m_hp >= m_maxHp) m_hp = m_maxHp;
-
-            sendHpMessage();
+            if (connectionId == m_connectionId) addHealth(amount);
         }
 
         private void addMana(int amount, int connectionId)
@@ -107,6 +99,19 @@ namespace Server.Services
         private void onClockTick()
         {
             addMana(5, m_connectionId);
+        }
+
+        public void addHealth(int amount)
+        {
+            m_hp += amount;
+            if (m_hp <= 0)
+            {
+                m_hp = 0;
+                m_signalBus.Fire(new OnDeathSignal() { connectionId = m_connectionId });
+            }
+            if (m_hp >= m_maxHp) m_hp = m_maxHp;
+
+            sendHpMessage();
         }
     }
 }

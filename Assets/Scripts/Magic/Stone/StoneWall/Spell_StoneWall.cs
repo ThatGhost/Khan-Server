@@ -20,7 +20,7 @@ namespace Server.Magic
         [Inject] private readonly ISpellPoolUtillity m_spellPoolUtillity;
         [Inject] private readonly ISpellNetworkingUtillity m_spellNetworkingUtillity;
         [Inject] private readonly ISpellPlayerUtillity m_spellPlayerUtillity;
-        [Inject] private readonly IPlayersVariableService m_playersVariableService;
+        [Inject] private readonly SignalBus m_signalBus;
 
         public override void Initialize(int connectionId, int playerSpellId)
         {
@@ -71,7 +71,7 @@ namespace Server.Magic
             if (placePoint != Vector3.zero)
             {
                 makeInstance(placePoint, direction);
-                m_playersVariableService.routeMana(playerSpellId, -manaCost);
+                m_signalBus.Fire(new OnManaSignal() { connectionId = this.connectionId, amount = -manaCost });
                 m_spellNetworkingUtillity.sendPlacementTrigger(playerSpellId, connectionId, placePoint, direction);
             }
         }

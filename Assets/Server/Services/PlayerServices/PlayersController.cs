@@ -13,7 +13,6 @@ namespace Server.Services
 {
     public class PlayersController: IPlayersController
     {
-        [Inject] private readonly IPlayersVariableService m_playersVariableService;
         private Dictionary<ConnectionId, PlayerRefrenceObject> m_playerRefrences = new Dictionary<ConnectionId, PlayerRefrenceObject>();
 
         public void AddPlayer(PlayerBehaviour playerBehaviour, ConnectionId connection)

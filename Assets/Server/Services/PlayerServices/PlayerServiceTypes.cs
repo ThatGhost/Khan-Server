@@ -38,14 +38,7 @@ namespace Server.Services
         public int Health { get; }
         public int MaxMana { get; set; }
         public int MaxHealth { get; set; }
-    }
-
-    public interface IPlayersVariableService
-    {
-        public void routeHealth(GameObject[] playerObject, int amount);
-        public void routeHealth(GameObject[] playerObject, int amount, int playerSpellId);
-        public void routeMana(int playerSpellId, int amount);
-        public void onDeath(int connectionId);
+        public void addHealth(int amount);
     }
 
     public interface IPlayerDeathService
