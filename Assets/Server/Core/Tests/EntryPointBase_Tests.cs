@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 
 using Khan_Shared.Networking;
-using Networking.EntryPoints;
+using Server.EntryPoints;
 
 public class EntryPointBase_Tests
 {

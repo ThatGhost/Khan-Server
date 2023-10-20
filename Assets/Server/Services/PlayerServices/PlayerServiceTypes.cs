@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Khan_Shared.Utils;
 using Khan_Shared.Magic;
-using Networking.Behaviours;
+using Server.Behaviours;
 using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public interface IPlayerInputService
     {

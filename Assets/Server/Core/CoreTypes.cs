@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.Networking.Transport;
 using Khan_Shared.Networking;
 
-namespace Networking.EntryPoints
+namespace Server.EntryPoints
 {
     public interface IEntryPoint
     {
@@ -41,7 +41,7 @@ namespace Networking.EntryPoints
     }
 }
 
-namespace Networking.Core
+namespace Server.Core
 {
     public interface IGameServer
     {

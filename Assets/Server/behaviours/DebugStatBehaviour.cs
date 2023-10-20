@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Networking.Behaviours
+namespace Server.Behaviours
 {
     public class DebugStatBehaviour : MonoBehaviour, IDebugStatBehaviour
     {

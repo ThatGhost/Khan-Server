@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Khan_Shared.Magic;
-using Networking.Behaviours;
+using Server.Behaviours;
 using Zenject;
-using Networking.Services;
+using Server.Services;
 
 namespace Server.Magic
 {

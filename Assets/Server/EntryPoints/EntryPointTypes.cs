@@ -1,7 +1,7 @@
 ﻿using System;
 using Khan_Shared.Networking;
 
-namespace Networking.EntryPoints
+namespace Server.EntryPoints
 {
     public interface ITestEntryPoint : IEntryPoint { };
     public interface IPlayerEntryPoint : IEntryPoint { };

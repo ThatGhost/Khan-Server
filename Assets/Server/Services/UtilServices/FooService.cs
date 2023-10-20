@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using Khan_Shared.Networking;
-using Networking.Behaviours;
-using Networking.Core;
+using Server.Behaviours;
+using Server.Core;
 using Zenject;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class FooService : IFooService
     {

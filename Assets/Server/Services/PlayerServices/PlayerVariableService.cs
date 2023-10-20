@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using Khan_Shared.Networking;
-using static Networking.Services.IPlayerVariableService;
+using static Server.Services.IPlayerVariableService;
 using ConnectionId = System.Int32;
 using System;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class PlayerVariableService : IPlayerVariableService, IInitializable, IDisposable
     {

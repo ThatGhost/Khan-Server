@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 
 using Khan_Shared.Networking;
-using Networking.Core;
+using Server.Core;
 using Zenject;
 
 using ConnectionId = System.Int32;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class MessagePublisher : IMessagePublisher
     {

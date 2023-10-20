@@ -4,7 +4,7 @@ using Khan_Shared.Networking;
 using Unity.Networking.Transport;
 using Unity.Collections;
 
-namespace Networking.Core
+namespace Server.Core
 {
     public class Coder: ICoder
     {

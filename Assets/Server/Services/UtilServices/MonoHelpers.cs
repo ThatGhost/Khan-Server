@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class MonoHelpers : MonoBehaviour, IMonoHelper
     {

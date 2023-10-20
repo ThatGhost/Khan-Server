@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using Networking.Services;
+using Server.Services;
 using UnityEngine;
 using Zenject;
-using static Networking.Services.IClockService;
+using static Server.Services.IClockService;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class ClockService : IClockService
     {

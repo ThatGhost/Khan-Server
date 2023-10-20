@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using Networking.Core;
-using Networking.Behaviours;
+using Server.Core;
+using Server.Behaviours;
 using System.Linq;
 using Khan_Shared.Networking;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class ClientInitializerService : IInitializable, ILateDisposable
     {

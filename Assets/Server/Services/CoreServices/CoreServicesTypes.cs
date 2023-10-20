@@ -4,7 +4,7 @@ using UnityEngine;
 using Khan_Shared.Networking;
 using Khan_Shared.Magic;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public interface IMessagePublisher
     {

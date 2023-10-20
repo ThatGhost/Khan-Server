@@ -6,7 +6,7 @@ using UnityEngine;
 using PlayerSpellId = System.Int32;
 using UnityEngine.Windows;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class PlayerSpellController : IPlayerSpellController
     {

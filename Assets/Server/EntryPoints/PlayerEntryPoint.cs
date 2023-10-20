@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using Khan_Shared.Networking;
 using Khan_Shared.Utils;
 using Zenject;
-using Networking.Services;
+using Server.Services;
 
 using UnityEngine;
 
-namespace Networking.EntryPoints
+namespace Server.EntryPoints
 {
     public class PlayerEntryPoint: EntryPointBase, IPlayerEntryPoint
     {

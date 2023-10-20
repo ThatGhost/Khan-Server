@@ -5,7 +5,7 @@ using Zenject;
 using Khan_Shared.Networking;
 using ConnectionId = System.Int32;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class ClientDestructorService : IClientDestructorService
     {

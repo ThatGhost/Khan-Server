@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Khan_Shared.Utils;
 
-namespace Networking.Behaviours
+namespace Server.Behaviours
 {
     public class PlayerPositionBehaviour : MonoBehaviour, IPlayerPositionBehaviour
     {

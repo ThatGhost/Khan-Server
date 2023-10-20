@@ -1,7 +1,7 @@
 using System;
 using Zenject;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class PlayerDeathService : IPlayerDeathService, IInitializable, IDisposable
     {

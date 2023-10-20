@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Networking.EntryPoints
+namespace Server.EntryPoints
 {
     public class EntryPointBase : IEntryPoint
     {

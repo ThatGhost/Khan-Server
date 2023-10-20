@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Zenject;
 
-namespace Networking.EntryPoints
+namespace Server.EntryPoints
 {
     public class EntryPointRegistry : IEntryPointRegistry
     {

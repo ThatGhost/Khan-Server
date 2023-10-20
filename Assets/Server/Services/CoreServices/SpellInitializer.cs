@@ -5,7 +5,7 @@ using System.Linq;
 
 using ConnectionId = System.Int32;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class SpellInitializer : ISpellInitializer
     {

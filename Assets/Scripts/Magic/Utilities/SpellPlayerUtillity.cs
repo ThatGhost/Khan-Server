@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Networking.Services;
+using Server.Services;
 using UnityEngine;
 
 namespace Server.Magic

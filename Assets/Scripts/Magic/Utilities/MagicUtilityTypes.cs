@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Khan_Shared.Magic;
-using Networking.Services;
+using Server.Services;
 using UnityEngine;
 
 namespace Server.Magic

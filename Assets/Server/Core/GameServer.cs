@@ -4,13 +4,13 @@ using UnityEngine;
 
 using Unity.Collections;
 using Unity.Networking.Transport;
-using Networking.Behaviours;
+using Server.Behaviours;
 using Zenject;
 
 using Khan_Shared.Networking;
-using Networking.Services;
+using Server.Services;
 
-namespace Networking.Core
+namespace Server.Core
 {
     public class GameServer : IGameServer, IInitializable, IFixedTickable, ILateDisposable
     {

@@ -4,7 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-using Networking.Core;
+using Server.Core;
 using Unity.Networking.Transport;
 using Unity.Collections;
 using Khan_Shared.Networking;

@@ -2,7 +2,7 @@
 using Zenject;
 using Khan_Shared.Utils;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class PlayerInputService : IPlayerInputService
     {

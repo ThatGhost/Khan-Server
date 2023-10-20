@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Zenject;
-using Networking.Services;
+using Server.Services;
 using Khan_Shared.Networking;
 
-namespace Networking.Behaviours
+namespace Server.Behaviours
 {
     public class TestBehaviour : MonoBehaviour
     {

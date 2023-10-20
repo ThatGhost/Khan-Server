@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Khan_Shared.Magic;
 using UnityEngine;
 using Zenject;
-using Networking.Services;
+using Server.Services;
 
 namespace Server.Magic
 {

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using Unity.Networking.Transport;
 
 using Khan_Shared.Networking;
-using Networking.EntryPoints;
-using Networking.Behaviours;
+using Server.EntryPoints;
+using Server.Behaviours;
 
 using Zenject;
 using ConnectionId = System.Int32;
 
-namespace Networking.Core
+namespace Server.Core
 {
     public class MessageQueue: IMessageQueue
     {

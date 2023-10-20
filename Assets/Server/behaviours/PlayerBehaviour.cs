@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using Networking.Services;
+using Server.Services;
 
-namespace Networking.Behaviours
+namespace Server.Behaviours
 {
     public class PlayerBehaviour : MonoBehaviour
     {

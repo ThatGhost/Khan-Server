@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Khan_Shared.Networking;
-using Networking.Services;
+using Server.Services;
 using Zenject;
 
-namespace Networking.EntryPoints
+namespace Server.EntryPoints
 {
     public class TestEntryPoint : EntryPointBase, ITestEntryPoint
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Networking.Behaviours;
+using Server.Behaviours;
 using UnityEngine;
 using System.Linq;
 using Zenject;
@@ -9,7 +9,7 @@ using Khan_Shared.Magic;
 
 using ConnectionId = System.Int32;
 
-namespace Networking.Services
+namespace Server.Services
 {
     public class PlayersController: IPlayersController
     {
