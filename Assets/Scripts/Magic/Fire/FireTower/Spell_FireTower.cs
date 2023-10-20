@@ -12,7 +12,8 @@ namespace Server.Magic
     public class Spell_FireTower : Spell
     {
         public float size = 1;
-        public float timeUntilDamage = 9;
+        public float totalSpellDuration = 9;
+        public float startingSpellDuration = 4;
         public int damage = 10;
         public int manaCost = 10;
 

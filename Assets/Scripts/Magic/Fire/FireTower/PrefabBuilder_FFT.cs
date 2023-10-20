@@ -10,11 +10,9 @@ namespace Server.Magic
 {
     public class PrefabBuilder_FFT : PrefabBuilder
     {
-        [Inject] private readonly SignalBus m_signalBus;
-
         // Components
-        private float timeUntilDamage;
-        private int playerSpellId;
+        private float totalSpellDuration;
+        private float startingSpellDuration;
         private int damage;
 
         private List<GameObject> m_collidedPlayers = new List<GameObject>();
@@ -22,12 +20,12 @@ namespace Server.Magic
         // Modify the components based on spell params
         public override void build(Spell spell)
         {
-            playerSpellId = spell.PlayerSpellId;
             if (spell is not Spell_FireTower fireTower) return;
             // initialize the spell specific components
 
             damage = fireTower.damage;
-            timeUntilDamage = fireTower.timeUntilDamage;
+            totalSpellDuration = fireTower.totalSpellDuration;
+            startingSpellDuration = fireTower.startingSpellDuration;
         }
 
         public override void start()
@@ -36,15 +34,22 @@ namespace Server.Magic
             StartCoroutine(timeTillDamage());
         }
 
-        private IEnumerator timeTillDamage()
+        private IEnumerator timeTillDamage(float timePassed = 0)
         {
-            yield return new WaitForSeconds(timeUntilDamage);
-            foreach (var player in m_collidedPlayers)
+            const float damageTickRate = 0.5f;
+            yield return new WaitForSeconds(startingSpellDuration);
+
+            while (timePassed < totalSpellDuration - startingSpellDuration)
             {
-                if(player.transform.parent.TryGetComponent(out PlayerBehaviour playerBehaviour))
+                foreach (var player in m_collidedPlayers)
                 {
-                    playerBehaviour.m_playerVariableService.addHealth(-damage);
+                    if (player.transform.parent.TryGetComponent(out PlayerBehaviour playerBehaviour))
+                    {
+                        playerBehaviour.m_playerVariableService.addHealth(-damage);
+                    }
                 }
+                yield return new WaitForSeconds(damageTickRate);
+                timePassed += damageTickRate;
             }
         }
 

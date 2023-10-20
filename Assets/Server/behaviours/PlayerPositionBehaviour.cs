@@ -5,6 +5,9 @@ namespace Server.Behaviours
 {
     public class PlayerPositionBehaviour : MonoBehaviour, IPlayerPositionBehaviour
     {
+        private bool m_active;
+        public bool Active { get { return m_active; } set { m_active = value; } }
+
         [SerializeField] private Transform face;
         [SerializeField] private Transform feet;
         [SerializeField] private AnimationCurve speedToVelocity;
@@ -112,6 +115,12 @@ namespace Server.Behaviours
             // float yvel = m_velocity.y;
             // m_velocity = Vector3.ClampMagnitude(m_velocity, maxVelocity);
             // m_velocity.y = yvel;
+        }
+
+        public void SetPositionAndVelocity(Vector3 position, Vector3 velocity)
+        {
+            m_velocity = velocity;
+            m_rigidbody.position = position;
         }
     }
 }

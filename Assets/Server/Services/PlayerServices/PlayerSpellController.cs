@@ -15,6 +15,9 @@ namespace Server.Services
 
         public Spell[] getSpells() => m_playerSpells.Values.Select(p => p.spell).ToArray();
 
+        private bool m_active;
+        public bool Active { get { return m_active; } set { m_active = value; } }
+
         public void addSpell(PlayerSpell playerSpell, int key)
         {
             m_playerSpells.Add(playerSpell.playerSpellId, playerSpell);

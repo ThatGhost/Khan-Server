@@ -13,7 +13,9 @@ namespace Server.Behaviours
     {
         public void updateInput(SInput input);
         public void AddForce(Vector3 force);
+        public void SetPositionAndVelocity(Vector3 position, Vector3 velocity);
         public Vector2 FaceRotation { get; }
+        public bool Active { get; set; }
     }
 
     public interface ISpellUtil_BasicTimer
@@ -30,5 +32,13 @@ namespace Server.Behaviours
     {
         public void addBytesOut(int bytes);
         public void addMessagesOut(int messages);
+    }
+
+    public interface IPlayerGraphicsBehaviour 
+    {
+        public void hideUI();    
+        public void showUI();
+        public void hideHands();
+        public void showHands();
     }
 }

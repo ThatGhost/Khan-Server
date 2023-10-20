@@ -29,6 +29,7 @@ namespace Server.Services
         public Spell[] getSpells();
         public bool playerOwnsSpell(int playerSpellId);
         public void destructSpells();
+        public bool Active { get; set; }
     }
 
     public interface IPlayerVariableService
