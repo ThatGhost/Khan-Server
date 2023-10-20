@@ -48,6 +48,11 @@ namespace Networking.Services
         public void onDeath(int connectionId);
     }
 
+    public interface IPlayerDeathService
+    {
+
+    }
+
     public struct PlayerRefrenceObject
     {
         public int _connectionId;

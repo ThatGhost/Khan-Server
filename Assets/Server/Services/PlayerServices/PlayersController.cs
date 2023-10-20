@@ -28,7 +28,6 @@ namespace Networking.Services
                 playerRefrenceObject._playerSpellController = playerBehaviour.m_playerSpellController;
                 playerRefrenceObject._playerVariableService = playerBehaviour.m_playerVariableService;
                 playerRefrenceObject._playerVariableService.setup(connection);
-                playerRefrenceObject._playerVariableService.onDeath = m_playersVariableService.onDeath;
                 m_playerRefrences.Add(connection, playerRefrenceObject);
             }
         }

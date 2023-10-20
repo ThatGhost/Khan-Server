@@ -30,7 +30,6 @@ namespace Server.Magic
                 Vector3 lookDirection = m_spellPlayerUtillity.getLookDirection(player, false);
                 lookDirection.y = 0;
                 player._playerPositionBehaviour.AddForce(lookDirection * force);
-                player._playerVariableService.addMana(-manaCost);
 
                 m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, true);
                 m_monoHelper.StartCoroutine(coolDown());

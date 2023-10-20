@@ -1,18 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
+using Zenject;
 
-public class PlayerDeathService : MonoBehaviour
+namespace Networking.Services
 {
-    // Start is called before the first frame update
-    void Start()
+    public class PlayerDeathService : IPlayerDeathService, IInitializable, IDisposable
     {
-        
-    }
+        [Inject] private readonly SignalBus _signalBus;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public void Dispose()
+        {
+            _signalBus.Subscribe<OnDeathSignal>(x => onDeath(x.connectionId));
+        }
+
+        public void Initialize()
+        {
+            _signalBus.Unsubscribe<OnDeathSignal>(x => onDeath(x.connectionId));
+        }
+
+        private void onDeath(int connection)
+        {
+
+        }
     }
 }
