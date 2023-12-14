@@ -19,7 +19,8 @@ MonoBehaviour:
   timeToActivation: 55
   cooldown: 1
   size: 5
-  timeUntilDamage: 10
-  damage: 10
+  totalSpellDuration: 10
+  startingSpellDuration: 5.5
+  damage: 20
   manaCost: 20
   enabled: 1

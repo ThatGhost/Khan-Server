@@ -112,14 +112,12 @@ namespace Server.Behaviours
         public void AddForce(Vector3 force)
         {
             m_velocity += force;
-            // float yvel = m_velocity.y;
-            // m_velocity = Vector3.ClampMagnitude(m_velocity, maxVelocity);
-            // m_velocity.y = yvel;
         }
 
         public void SetPositionAndVelocity(Vector3 position, Vector3 velocity)
         {
             m_velocity = velocity;
+            m_rigidbody.velocity = velocity;
             m_rigidbody.position = position;
         }
     }

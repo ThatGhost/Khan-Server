@@ -2,9 +2,6 @@ using Khan_Shared.Networking;
 
 using System;
 using System.Collections;
-
-using UnityEditor.MemoryProfiler;
-
 using UnityEngine;
 
 using Zenject;
@@ -21,16 +18,16 @@ namespace Server.Services
         [Inject] private readonly IMessagePublisher _messagePublisher;
         [Inject(Id = "spawnPoint")] private readonly Transform spawnpoint;
 
-        private readonly float respawnCooldown = 3f;
+        private readonly float respawnCooldown = 5f;
 
         public void Dispose()
         {
-            _signalBus.Subscribe<OnDeathSignal>(x => onDeath(x.connectionId));
+            _signalBus.Unsubscribe<OnDeathSignal>(x => onDeath(x.connectionId));
         }
 
         public void Initialize()
         {
-            _signalBus.Unsubscribe<OnDeathSignal>(x => onDeath(x.connectionId));
+            _signalBus.Subscribe<OnDeathSignal>(x => onDeath(x.connectionId));
         }
 
         private void onDeath(ConnectionId connectionId)
@@ -38,9 +35,11 @@ namespace Server.Services
             PlayerRefrenceObject? player = _playersController.getPlayer(connectionId);
             if (player == null) throw new Exception("err.services.player.notfound");
 
+
             // stop player controll -- position and spell controller to unactive
             player.Value._playerSpellController.Active = false;
             player.Value._playerPositionBehaviour.Active = false;
+            player.Value._gameObject.SetActive(false);
 
             // send death message to client
             Message msg = new Message(MessageTypes.PlayerDeath, new object[] { (ushort)connectionId }, MessagePriorities.high, true);
@@ -53,7 +52,14 @@ namespace Server.Services
         private IEnumerator deathCooldown(PlayerRefrenceObject player)
         {
             yield return new WaitForSeconds(respawnCooldown);
+            respawn(player);
+        }
+
+        private void respawn(PlayerRefrenceObject player)
+        {
+            Debug.Log("respawn, "+ spawnpoint.position);
             // position to spawn location -- player position behaviour set
+            player._gameObject.SetActive(true);
             player._playerPositionBehaviour.SetPositionAndVelocity(spawnpoint.position, Vector3.zero);
 
             // full hp and mana -- send add hp and mana signals with 1000 hp and mana as amount
@@ -65,7 +71,7 @@ namespace Server.Services
             player._playerPositionBehaviour.Active = true;
 
             // send respawn message to client
-            Message msg = new Message(MessageTypes.PlayerRespawn, new object[] { 
+            Message msg = new Message(MessageTypes.PlayerRespawn, new object[] {
                 (ushort)player._connectionId,
                 (float)spawnpoint.position.x,
                 (float)spawnpoint.position.y,

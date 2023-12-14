@@ -9,10 +9,11 @@ using Zenject;
 
 using Khan_Shared.Networking;
 using Server.Services;
+using System;
 
 namespace Server.Core
 {
-    public class GameServer : IGameServer, IInitializable, IFixedTickable, ILateDisposable
+    public class GameServer : IGameServer, IInitializable, IFixedTickable, IDisposable
     {
         private NetworkDriver m_networkDriver;
         private NativeList<NetworkConnection> m_connections;
@@ -77,13 +78,13 @@ namespace Server.Core
             m_tick++;
         }
 
-        public void LateDispose()
+        public void Dispose()
         {
             if (m_networkDriver.IsCreated)
             {
                 m_networkDriver.Dispose();
-                m_connections.Dispose();
             }
+            m_connections.Dispose();
         }
 
         private void cleanUpConnections()

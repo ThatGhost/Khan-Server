@@ -43,7 +43,7 @@ namespace Server.Magic
             {
                 foreach (var player in m_collidedPlayers)
                 {
-                    if (player.transform.parent.TryGetComponent(out PlayerBehaviour playerBehaviour))
+                    if (player.transform.parent.TryGetComponent(out PlayerBehaviour playerBehaviour) && player.activeInHierarchy)
                     {
                         playerBehaviour.m_playerVariableService.addHealth(-damage);
                     }
@@ -56,6 +56,7 @@ namespace Server.Magic
         private IEnumerator die(float deathTime)
         {
             yield return new WaitForSeconds(deathTime);
+            m_collidedPlayers.Clear();
             onDestruction.Invoke(this);
         }
 
