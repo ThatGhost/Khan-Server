@@ -50,8 +50,8 @@ namespace Server.Services
 
         public void Dispose()
         {
-            m_signalBus.Unsubscribe<OnHealthSignal>(x => addHp(x.amount, x.connectionId));
-            m_signalBus.Unsubscribe<OnManaSignal>(x => addMana(x.amount, x.connectionId));
+            m_signalBus.TryUnsubscribe<OnHealthSignal>(x => addHp(x.amount, x.connectionId));
+            m_signalBus.TryUnsubscribe<OnManaSignal>(x => addMana(x.amount, x.connectionId));
         }
 
         public void setup(ConnectionId connectionId)

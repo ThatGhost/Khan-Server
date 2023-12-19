@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Khan_Shared.Utils;
+using System;
 
 namespace Server.Behaviours
 {
@@ -105,7 +106,9 @@ namespace Server.Behaviours
 
         private void ApplyForce()
         {
-            m_rigidbody.velocity = m_velocity;
+            m_rigidbody.MovePosition(m_rigidbody.position + m_velocity / 100);
+            m_rigidbody.velocity = Vector3.zero;
+            //m_rigidbody.velocity = m_velocity;
             m_velocity = Vector3.Lerp(m_velocity, Vector3.zero, Time.fixedDeltaTime * friction);
         }
 

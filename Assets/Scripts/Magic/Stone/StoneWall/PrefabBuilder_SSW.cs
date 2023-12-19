@@ -21,7 +21,7 @@ namespace Server.Magic
 
         public override void start()
         {
-            StartCoroutine(die(30));
+            StartCoroutine(die(10));
         }
 
         private IEnumerator die(float deathTime)

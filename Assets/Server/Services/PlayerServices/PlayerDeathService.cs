@@ -22,7 +22,7 @@ namespace Server.Services
 
         public void Dispose()
         {
-            _signalBus.Unsubscribe<OnDeathSignal>(x => onDeath(x.connectionId));
+            _signalBus.TryUnsubscribe<OnDeathSignal>(x => onDeath(x.connectionId));
         }
 
         public void Initialize()

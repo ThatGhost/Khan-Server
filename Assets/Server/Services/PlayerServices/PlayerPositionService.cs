@@ -15,7 +15,7 @@ namespace Server.Services
         [Inject] private readonly IPlayersController m_playersController;
         [Inject] private readonly IMonoHelper m_monoHelper;
 
-        private readonly float timeBetweenReconciliation = 0.5f;
+        private readonly float timeBetweenReconciliation = 0.2f;
 
         public void Initialize()
         {

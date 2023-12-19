@@ -17,7 +17,7 @@ namespace Server.Services
         private int m_currentPlayerSpellId = 1;
 
         // TEMP until outside storage
-        private SpellIds[] spellIds = new SpellIds[]{ SpellIds.Stone_StoneWall, SpellIds.Air_AirDash, SpellIds.Fire_FireTower };
+        private SpellIds[] spellIds = new SpellIds[]{ SpellIds.Fire_FireTower, SpellIds.Stone_StoneWall };
 
         public void InitializeSpells(ConnectionId connection)
         {

@@ -17,7 +17,7 @@ MonoBehaviour:
   prefab: {fileID: 4354003001387672857, guid: 9e3104dbecf97406e8e28ee83f410678, type: 3}
   spellId: 1
   timeToActivation: 55
-  cooldown: 1
+  cooldown: 2
   size: 5
   totalSpellDuration: 10
   startingSpellDuration: 5.5

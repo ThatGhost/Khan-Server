@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Khan_Shared.Magic;
 using Zenject;
 using Server.Services;
-using Khan_Shared.Networking;
 
 namespace Server.Magic
 {
@@ -36,9 +34,19 @@ namespace Server.Magic
             {
                 enabled = false;
 
-                m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, true);
+                Vector3 placePoint = m_spellPlayerUtillity.getGroundPoint(player);
+                Vector3 direction = m_spellPlayerUtillity.getLookDirection(player, true);
+                direction = new Vector3(0, direction.y + 90, 0);
 
-                m_monoHelper.StartCoroutine(WhaitToTrigger(metaData));
+                if (placePoint != Vector3.zero)
+                {
+                    makeInstance(placePoint, direction);
+                    m_signalBus.Fire(new OnManaSignal() { connectionId = this.connectionId, amount = -manaCost });
+                    m_spellNetworkingUtillity.sendPlacementTrigger(playerSpellId, connectionId, placePoint, direction);
+                    m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, true);
+                }
+                else m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
+
                 m_monoHelper.StartCoroutine(coolDown());
             }
             else m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
@@ -57,23 +65,6 @@ namespace Server.Magic
         {
             yield return new WaitForSeconds(cooldown + (timeToActivation / 60));
             enabled = true;
-        }
-
-        private IEnumerator WhaitToTrigger(object[] metaData)
-        {
-            yield return new WaitForSeconds(timeToActivation / 60);
-
-            PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
-            Vector3 placePoint = m_spellPlayerUtillity.getGroundPoint(player);
-            Vector3 direction = m_spellPlayerUtillity.getLookDirection(player, true);
-            direction = new Vector3(0, direction.y + 90, 0);
-
-            if (placePoint != Vector3.zero)
-            {
-                makeInstance(placePoint, direction);
-                m_signalBus.Fire(new OnManaSignal() { connectionId = this.connectionId, amount = -manaCost });
-                m_spellNetworkingUtillity.sendPlacementTrigger(playerSpellId, connectionId, placePoint, direction);
-            }
         }
 
         public override void Destruct()

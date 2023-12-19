@@ -78,6 +78,11 @@ namespace Server.Core
             m_tick++;
         }
 
+        public void OnApplicationQuit()
+        {
+            Dispose();
+        }
+
         public void Dispose()
         {
             if (m_networkDriver.IsCreated)

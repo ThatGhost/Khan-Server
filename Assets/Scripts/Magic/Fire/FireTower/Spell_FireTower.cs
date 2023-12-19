@@ -39,12 +39,23 @@ namespace Server.Magic
             {
                 enabled = false;
 
-                m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, true);
-
-                m_monoHelper.StartCoroutine(WhaitToTrigger(metaData));
                 m_monoHelper.StartCoroutine(coolDown());
+
+                Vector3 placePoint = m_spellPlayerUtillity.getGroundPoint(player);
+                if (placePoint != Vector3.zero)
+                {
+                    makeInstance(placePoint);
+                    signalBus.Fire(new OnManaSignal() { connectionId = this.connectionId, amount = -manaCost });
+                    m_spellNetworkingUtillity.sendAOETrigger(playerSpellId, connectionId, placePoint);
+                    m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, true);
+                }
+                else m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
             }
-            else m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
+            else
+            {
+                m_spellNetworkingUtillity.sendPostTrigger(playerSpellId, connectionId, false);
+                Debug.Log($"enabled => {enabled}, mana => {player._playerVariableService.Mana}");
+            }
         }
 
         private void makeInstance(Vector3 position)
@@ -57,22 +68,8 @@ namespace Server.Magic
 
         private IEnumerator coolDown()
         {
-            yield return new WaitForSeconds(cooldown + (timeToActivation / 60));
+            yield return new WaitForSeconds(cooldown);
             enabled = true;
-        }
-
-        private IEnumerator WhaitToTrigger(object[] metaData)
-        {
-            yield return new WaitForSeconds(timeToActivation / 60);
-
-            PlayerRefrenceObject player = (PlayerRefrenceObject)metaData[0];
-            Vector3 placePoint = m_spellPlayerUtillity.getGroundPoint(player);
-            if (placePoint != Vector3.zero)
-            {
-                makeInstance(placePoint);
-                signalBus.Fire(new OnManaSignal() { connectionId = this.connectionId, amount = -manaCost });
-                m_spellNetworkingUtillity.sendAOETrigger(playerSpellId, connectionId, placePoint);
-            }
         }
 
         public override void Destruct()
